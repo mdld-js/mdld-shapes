@@ -11,7 +11,7 @@
 
 ## � Quick Start Pattern
 
-~~~~~~md
+~~~~~~md {cat:quick-start}
 [mdld] <https://mdld.js.org/>
 [ex] <mdld:shacl/example/logical/>
 

@@ -43,28 +43,7 @@ These are targeting predicates that determine which nodes get validated (not con
 
 ---
 
-## 📝 MDLD Syntax Reference
-
-**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
-
-| Symbol | Meaning | Example |
-|--------|---------|---------|
-| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
-| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:target ?sh:targetClass}` |
-| `?` | Object predicate (Subject → Object) | `?sh:targetClass`, `?sh:targetNode` |
-| `!` | Reverse predicate (Object → Subject) | `!member` |
-| `.` | Class type declaration | `.sh:NodeShape` |
-| `^^` | Literal datatype | `^^xsd:integer` |
-| `{}` | Subject reset (clears current subject) | `{=}` |
-
-**Test data pattern:**
-~~~~~~md
-[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
-~~~~~~
-
-**For detailed syntax, see:**
-- MDLD Spec: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/spec/Spec.md`
-- Few-shot examples: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/examples/few-shot.md`
+[Syntax Reference](#syntax-reference)
 
 
 
@@ -89,6 +68,11 @@ These are targeting predicates that determine which nodes get validated (not con
 <http://www.w3.org/ns/shacl#targetClass> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:targeting/>
 
 ### Shape Definition
 
@@ -202,6 +186,11 @@ Target class targets all nodes that are instances of a specific RDF class for sh
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:targeting/>
+
 ### Shape Definition
 
 **Database Validation Shape** {=ex:DatabaseValidationShape .sh:NodeShape label} targets the [Main Database] {+ex:MainDatabase ?sh:targetNode} for critical infrastructure validation.
@@ -310,6 +299,11 @@ Target node targets specific individual nodes identified by their IRI for precis
 <http://www.w3.org/ns/shacl#targetSubjectsOf> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:targeting/>
 
 ### Shape Definition
 
@@ -426,6 +420,11 @@ Target subjects of targets all subjects that have a specific property pointing t
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:targeting/>
+
 ### Shape Definition
 
 **Team Member Validation Shape** {=ex:TeamMemberValidationShape .sh:NodeShape label} targets all [team members] {+ex:memberOf ?sh:targetObjectsOf} to validate team membership requirements.
@@ -526,6 +525,40 @@ Target objects of targets all objects that are pointed to by a specific property
 
 
 
+<a id="syntax-reference"></a>
+
+## 📝 MDLD Syntax Reference
+
+**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
+| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:target ?sh:targetClass}` |
+| `?` | Object predicate (Subject → Object) | `?sh:targetClass`, `?sh:targetNode` |
+| `!` | Reverse predicate (Object → Subject) | `!member` |
+| `.` | Class type declaration | `.sh:NodeShape` |
+| `^^` | Literal datatype | `^^xsd:integer` |
+| `{}` | Subject reset (clears current subject) | `{=}` |
+
+**Test data pattern:**
+~~~~~~md
+[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
+~~~~~~
+
+**For detailed syntax, see:**
+- MDLD Spec: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/spec/Spec.md`
+- Few-shot examples: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/examples/few-shot.md`
+
+
+
+
+
+
+{=}
+
+
+
 <a id="constraints-index"></a>
 
 [mdld] <https://mdld.js.org/>
@@ -551,28 +584,7 @@ We can broadly divide them into these type groups:
 
 ---
 
-## 📝 MDLD Syntax Reference
-
-**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
-
-| Symbol | Meaning | Example |
-|--------|---------|---------|
-| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
-| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:constraint ?sh:property}` |
-| `?` | Object predicate (Subject → Object) | `?sh:path`, `?sh:class` |
-| `!` | Reverse predicate (Object → Subject) | `!member` |
-| `.` | Class type declaration | `.sh:NodeShape` |
-| `^^` | Literal datatype | `^^xsd:integer` |
-| `{}` | Subject reset (clears current subject) | `{=}` |
-
-**Test data pattern:**
-~~~~~~md
-[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
-~~~~~~
-
-**For detailed syntax, see:**
-- MDLD Spec: `https://mdld.js.org/spec/Spec.md`
-- Few-shot examples: `https://mdld.js.org/examples/few-shot.md`
+[Syntax Reference](#syntax-reference)
 
 ---
 
@@ -694,6 +706,11 @@ Need to check if these are working:
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <cat:example/class/>
+
 ### Shape Definition
 
 **Employee manager must be a Person instance** {=ex:#managerClass .sh:PropertyShape message}
@@ -787,8 +804,6 @@ The class constraint ensures that property values are instances of specific RDF 
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/datatype/>
-
 
 # Data Type {=sh:datatype .class:Constraint label}
 
@@ -797,6 +812,11 @@ The class constraint ensures that property values are instances of specific RDF 
 <http://www.w3.org/ns/shacl#datatype> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:datatype/>
 
 ### Shape Definition
 
@@ -893,7 +913,6 @@ The datatype constraint validates that literal values have the correct RDF datat
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/nodekind/>
 
 # Node Kind {=sh:nodeKind .class:Constraint label}
 
@@ -1004,8 +1023,6 @@ The node kind constraint validates that values are IRIs or literals (MDLD doesn'
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/count/>
-
 
 # Min Count {=sh:minCount .class:Constraint label}
 
@@ -1020,6 +1037,11 @@ The node kind constraint validates that values are IRIs or literals (MDLD doesn'
 <http://www.w3.org/ns/shacl#maxCount> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:count/>
 
 ### Shape Definition
 
@@ -1153,6 +1175,11 @@ Count constraints control the number of values a property can have.
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:range/>
+
 ### Shape Definition
 
 **Event ticket prices must be between $10.00 and $1000.00 inclusive** {=ex:#priceRange .sh:PropertyShape sh:message}
@@ -1261,7 +1288,6 @@ Range constraints control the value range for ordered datatypes.
 [cat] <mdld:shacl/>
 [ex] <mdld:shacl/example/comparison/>
 
-
 # Comparison Constraints {=sh:lessThan .class:ComparisonConstraint label}
 
 > Validates property values against reference nodes using comparison operators. Essential for ordering, version control, date validation, and business rule enforcement where values must be smaller than or equal to specific reference points. {comment}
@@ -1271,6 +1297,11 @@ Range constraints control the value range for ordered datatypes.
 <http://www.w3.org/ns/shacl#equals> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:comparison/>
 
 ### Shape Definition
 
@@ -1389,6 +1420,11 @@ Comparison constraints validate property values against reference nodes using co
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:disjoint/>
+
 ### Shape Definition
 
 **Preferred labels must be different from alternative labels** {=ex:DisjointExampleShape .sh:NodeShape label sh:message}
@@ -1492,6 +1528,11 @@ The disjoint constraint ensures that values of a property are disjoint with valu
 <http://www.w3.org/ns/shacl#not> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <mdld:shacl/example/not/>
 
 ### Shape Definition
 
@@ -1600,7 +1641,7 @@ The NOT constraint requires a shape reference that defines the forbidden pattern
 
 ## � Quick Start Pattern
 
-~~~~~~md
+~~~~~~md {cat:quick-start}
 [mdld] <https://mdld.js.org/>
 [ex] <mdld:shacl/example/logical/>
 
@@ -1723,6 +1764,11 @@ and a [nil] {+rdf:nil ?rdf:rest} node (end of list). Reset current subject to av
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:length/>
+
 ### Shape Definition
 
 **Username must be 3-20 characters long** {=ex:#usernameLength .sh:PropertyShape sh:message}
@@ -1840,6 +1886,11 @@ Length constraints control the length of string values.
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:pattern/>
+
 ### Shape Definition
 
 **Email must follow standard format** {=ex:EmailPatternConstraint .sh:PropertyShape sh:message}
@@ -1944,6 +1995,11 @@ The pattern constraint validates string values against regular expression patter
 <http://www.w3.org/ns/shacl#languageIn> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:language/>
 
 ### Shape Definition
 
@@ -2061,6 +2117,11 @@ and [nil] {+rdf:nil ?rdf:rest}. Reset subject: {=}
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:uniqueLang/>
+
 ### Shape Definition
 
 **Each language tag must appear only once** {=ex:UniqueLangExampleShape .sh:NodeShape label}
@@ -2166,6 +2227,11 @@ The uniqueLang constraint ensures that language tags of string literals are uniq
 <http://www.w3.org/ns/shacl#hasValue> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:hasvalue/>
 
 ### Shape Definition
 
@@ -2279,6 +2345,11 @@ The hasValue constraint requires a property to have exactly a specific value.
 <http://www.w3.org/ns/shacl#node> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:node/>
 
 ### Shape Definition
 
@@ -2395,6 +2466,11 @@ The node constraint requires property values to conform to a specific node shape
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:in/>
+
 ### Shape Definition
 
 **Status must be in allowed list** {=ex:#allowedStatus .sh:PropertyShape ?sh:property sh:message}
@@ -2508,6 +2584,11 @@ and [nil] {+rdf:nil ?rdf:rest}. Reset subject: {=}
 <http://www.w3.org/ns/shacl#qualifiedMaxCount> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:qualified/>
 
 ### Shape Definition
 
@@ -2630,6 +2711,12 @@ Qualified count constraints apply count constraints only to values that meet add
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:closed/>
+[schema] <http://schema.org/>
+
 ### Shape Definition
 
 **Only declared properties allowed** {=ex:ClosedExampleShape .sh:NodeShape ?cat:hasShape label} with **no additional properties** {sh:closed}.
@@ -2742,6 +2829,11 @@ The closed constraint enables closed world validation where only explicitly decl
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:deactivated/>
+
 ### Shape Definition
 
 **Deactivated Example Shape** {=ex:DeactivatedExampleShape .sh:NodeShape label} targets [Valid Node] {+ex:ValidNode ?sh:targetNode} and [Invalid Node] {+ex:InvalidNode ?sh:targetNode}.
@@ -2845,7 +2937,6 @@ The deactivated constraint temporarily disables specific constraints during vali
 [cat] <https://mdld.js.org/shacl/catalog/>
 [ex] <http://example.org/>
 
-
 # Severity Levels {=sh:severity .class:SeverityConstraint label}
 
 > Defines the severity level of validation violations (Info, Warning, Violation). Essential for prioritizing validation results and managing different types of constraint failures. {comment}
@@ -2854,6 +2945,11 @@ The deactivated constraint temporarily disables specific constraints during vali
 <http://www.w3.org/ns/shacl#message> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:severity/>
 
 ### Shape Definition
 
@@ -2970,6 +3066,11 @@ The severity constraint defines the severity level of validation violations.
 
 ---
 
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:message/>
+
 ### Shape Definition
 
 **Contract value must be positive for financial compliance** {=ex:#valueRule .sh:PropertyShape sh:message}
@@ -3072,7 +3173,6 @@ The message constraint provides human-readable error messages for constraint vio
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/js/>
 
 
 # JavaScript Function {=sh:js .class:Constraint label}
@@ -3082,6 +3182,11 @@ The message constraint provides human-readable error messages for constraint vio
 <http://www.w3.org/ns/shacl#js> {?cat:fullIRI}
 
 ---
+
+## 📋 Quick Start Pattern
+
+~~~~~~md
+[ex] <tag:my@example.org,2026:js/>
 
 ### Shape Definition
 

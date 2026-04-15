@@ -43,28 +43,7 @@ These are targeting predicates that determine which nodes get validated (not con
 
 ---
 
-## 📝 MDLD Syntax Reference
-
-**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
-
-| Symbol | Meaning | Example |
-|--------|---------|---------|
-| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
-| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:target ?sh:targetClass}` |
-| `?` | Object predicate (Subject → Object) | `?sh:targetClass`, `?sh:targetNode` |
-| `!` | Reverse predicate (Object → Subject) | `!member` |
-| `.` | Class type declaration | `.sh:NodeShape` |
-| `^^` | Literal datatype | `^^xsd:integer` |
-| `{}` | Subject reset (clears current subject) | `{=}` |
-
-**Test data pattern:**
-~~~~~~md
-[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
-~~~~~~
-
-**For detailed syntax, see:**
-- MDLD Spec: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/spec/Spec.md`
-- Few-shot examples: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/examples/few-shot.md`
+[Syntax Reference](#syntax-reference)
 
 
 
@@ -546,6 +525,40 @@ Target objects of targets all objects that are pointed to by a specific property
 
 
 
+<a id="syntax-reference"></a>
+
+## 📝 MDLD Syntax Reference
+
+**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
+| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:target ?sh:targetClass}` |
+| `?` | Object predicate (Subject → Object) | `?sh:targetClass`, `?sh:targetNode` |
+| `!` | Reverse predicate (Object → Subject) | `!member` |
+| `.` | Class type declaration | `.sh:NodeShape` |
+| `^^` | Literal datatype | `^^xsd:integer` |
+| `{}` | Subject reset (clears current subject) | `{=}` |
+
+**Test data pattern:**
+~~~~~~md
+[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
+~~~~~~
+
+**For detailed syntax, see:**
+- MDLD Spec: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/spec/Spec.md`
+- Few-shot examples: `/Users/davay/Documents/DeFUCC/MDLD/mdld-parse/examples/few-shot.md`
+
+
+
+
+
+
+{=}
+
+
+
 <a id="constraints-index"></a>
 
 [mdld] <https://mdld.js.org/>
@@ -571,28 +584,7 @@ We can broadly divide them into these type groups:
 
 ---
 
-## 📝 MDLD Syntax Reference
-
-**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
-
-| Symbol | Meaning | Example |
-|--------|---------|---------|
-| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
-| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:constraint ?sh:property}` |
-| `?` | Object predicate (Subject → Object) | `?sh:path`, `?sh:class` |
-| `!` | Reverse predicate (Object → Subject) | `!member` |
-| `.` | Class type declaration | `.sh:NodeShape` |
-| `^^` | Literal datatype | `^^xsd:integer` |
-| `{}` | Subject reset (clears current subject) | `{=}` |
-
-**Test data pattern:**
-~~~~~~md
-[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
-~~~~~~
-
-**For detailed syntax, see:**
-- MDLD Spec: `https://mdld.js.org/spec/Spec.md`
-- Few-shot examples: `https://mdld.js.org/examples/few-shot.md`
+[Syntax Reference](#syntax-reference)
 
 ---
 
@@ -812,8 +804,6 @@ The class constraint ensures that property values are instances of specific RDF 
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/datatype/>
-
 
 # Data Type {=sh:datatype .class:Constraint label}
 
@@ -923,7 +913,6 @@ The datatype constraint validates that literal values have the correct RDF datat
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/nodekind/>
 
 # Node Kind {=sh:nodeKind .class:Constraint label}
 
@@ -1034,8 +1023,6 @@ The node kind constraint validates that values are IRIs or literals (MDLD doesn'
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/count/>
-
 
 # Min Count {=sh:minCount .class:Constraint label}
 
@@ -1300,7 +1287,6 @@ Range constraints control the value range for ordered datatypes.
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [ex] <mdld:shacl/example/comparison/>
-
 
 # Comparison Constraints {=sh:lessThan .class:ComparisonConstraint label}
 
@@ -1655,7 +1641,7 @@ The NOT constraint requires a shape reference that defines the forbidden pattern
 
 ## � Quick Start Pattern
 
-~~~~~~md
+~~~~~~md {cat:quick-start}
 [mdld] <https://mdld.js.org/>
 [ex] <mdld:shacl/example/logical/>
 
@@ -2951,7 +2937,6 @@ The deactivated constraint temporarily disables specific constraints during vali
 [cat] <https://mdld.js.org/shacl/catalog/>
 [ex] <http://example.org/>
 
-
 # Severity Levels {=sh:severity .class:SeverityConstraint label}
 
 > Defines the severity level of validation violations (Info, Warning, Violation). Essential for prioritizing validation results and managing different types of constraint failures. {comment}
@@ -3188,7 +3173,6 @@ The message constraint provides human-readable error messages for constraint vio
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/js/>
 
 
 # JavaScript Function {=sh:js .class:Constraint label}

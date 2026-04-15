@@ -508,8 +508,7 @@ Demo files for SHACL constraints with test data and validation scenarios:
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/class/>
-
+[ex] <tag:my@example.org,2026:class/>
 
 # Class {=sh:class .class:Constraint label} Demo
 
@@ -569,7 +568,7 @@ ig-cli validate ./constraints/class.md
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/datatype/>
+[ex] <tag:my@example.org,2026:datatype/>
 
 
 # Data Type {=sh:datatype .class:Constraint label} Demo
@@ -634,7 +633,7 @@ ig-cli validate ./constraints/datatype.md
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/nodekind/>
+[ex] <tag:my@example.org,2026:nodekind/>
 
 
 # Node Kind {=sh:nodeKind .class:Constraint label} Demo
@@ -697,8 +696,7 @@ ig-cli validate ./constraints/nodekind.demo.md
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/count/>
-
+[ex] <tag:my@example.org,2026:count/>
 
 # Min Count {=sh:minCount .class:Constraint label} Demo
 
@@ -2040,7 +2038,7 @@ ig-cli validate ./constraints/message.md
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/js/>
+[ex] <tag:my@example.org,2026:js/>
 
 
 # JavaScript Function {=sh:js .class:Constraint label} Demo

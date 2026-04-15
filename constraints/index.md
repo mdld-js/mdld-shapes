@@ -21,28 +21,7 @@ We can broadly divide them into these type groups:
 
 ---
 
-## 📝 MDLD Syntax Reference
-
-**Authors should refer to MDLD Spec and few-shot examples for complete syntax documentation. Key patterns:**
-
-| Symbol | Meaning | Example |
-|--------|---------|---------|
-| `{=}` | Subject declaration (persists) | `{=ex:shape .sh:NodeShape}` |
-| `{+}` | Object introduction (temporary for ?/! predicates) | `{+ex:constraint ?sh:property}` |
-| `?` | Object predicate (Subject → Object) | `?sh:path`, `?sh:class` |
-| `!` | Reverse predicate (Object → Subject) | `!member` |
-| `.` | Class type declaration | `.sh:NodeShape` |
-| `^^` | Literal datatype | `^^xsd:integer` |
-| `{}` | Subject reset (clears current subject) | `{=}` |
-
-**Test data pattern:**
-~~~~~~md
-[Label] {+ex:instanceID ?ex:propertyName .ex:ClassName}
-~~~~~~
-
-**For detailed syntax, see:**
-- MDLD Spec: `https://mdld.js.org/spec/Spec.md`
-- Few-shot examples: `https://mdld.js.org/examples/few-shot.md`
+[Syntax Reference](../syntax-reference.md)
 
 ---
 
