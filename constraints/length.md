@@ -17,13 +17,6 @@
 
 ---
 
-## Demo {=ex:demo ?cat:hasDemo}
-
-## Shapes
-
-The **User Account Test Shape** {=ex:UserAccountTestShape .sh:NodeShape ?cat:hasShape label} validates all [member] {+member ?sh:targetObjectsOf} entities of the test data container to demonstrate length constraints with **Username Length Rule** {+ex:#usernameLength ?sh:property}, **Password Length Rule** {+ex:#passwordLength ?sh:property label} and **Bio Length Rule** {+ex:#bioLength .sh:PropertyShape ?sh:property label}
-
-## Rules
 
 **Username must be 3-20 characters long** {=ex:#usernameLength .sh:PropertyShape sh:message} requires the [username] {+ex:username ?sh:path} property to have at least [3] {sh:minLength ^^xsd:integer} and at most [20] {sh:maxLength ^^xsd:integer} characters.
 

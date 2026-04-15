@@ -1,8 +1,6 @@
 [mdld] <https://mdld.js.org/>
 [cat] <mdld:shacl/>
 [class] <cat:class/>
-[ex] <cat:example/nodekind/>
-[xsd] <http://www.w3.org/2001/XMLSchema#>
 
 # Node Kind {=sh:nodeKind .class:Constraint label}
 
@@ -12,62 +10,49 @@
 
 ---
 
-## Demo {=ex:demo ?cat:hasDemo}
-
-## Document Test Shape {=ex:DocumentTestShape .sh:NodeShape ?cat:hasShape label}
-
-Validates all [Document] {+ex:Document ?sh:targetClass} entities to demonstrate node kind constraints: **Content Literal Rule** {+ex:#contentLiteral ?sh:property} and **Reference IRI Rule** {+ex:#referenceIRI ?sh:property}.
-
-## Rules
-
-**Document content must be a literal** {=ex:#contentLiteral .sh:PropertyShape sh:message} -  all [content] {+ex:content ?sh:path} must be a [Literal] {+sh:Literal ?sh:nodeKind}.
-
-**Document reference must be an IRI** {=ex:#referenceIRI .sh:PropertyShape sh:message} - each [reference] {+ex:reference ?sh:path} must be an [IRI] {+sh:IRI ?sh:nodeKind}.
-
----
-
-### 📋 Test Data {=ex:data .Container}
-
-#### Valid Document {=ex:ValidDocument .ex:Documen ?member}
-
-Content: [This is the document content] {ex:content}
-Reference: <https://example.org/reference> {?ex:reference}
-
-#### Invalid Document {=ex:InvalidDocument .ex:Document ?member}
-
-Content: <https://example.org/invalid-content> {?ex:content}
-Reference: [Invalid Reference String] {ex:reference}
-
----
-
-[Demo] {=ex:demo} must produce exactly **2** {cat:expectsViolations ^^xsd:integer} violation.
-
-### Expected Validation Results {=ex:results ?cat:hasResults}
-
-1. **Valid Document** - passes (title is IRI, content is literal, reference is IRI)
-2. **Invalid Document** - fails 2 times (title is string instead of IRI and content is IRI, but should be a literal)
-
-Note: SHACL may report only one violation per focus node. The Invalid Document has multiple node kind violations but only the first is reported.
-
-### 🔍 Test Validation
-
-```bash
-# This should show 1 violation for node kind constraint violation
-ig-cli validate ./constraints/nodekind.md
-```
-
----
-
 ## 📝 MDLD Syntax Patterns
 
 **Recommended pattern for node kind constraints:**
 
-1. Use `sh:targetClass` for class-based targeting (diversity from container targeting)
+1. Use `sh:targetClass` for class-based targeting
 2. Focus on IRI and Literal node kinds (MDLD doesn't produce blank nodes)
 3. Use correct property syntax: IRIs without brackets, literals with brackets
 4. Test both valid and invalid node kind combinations
 
-This approach ensures proper node type validation while demonstrating different SHACL targeting techniques.
+**Use cases:**
+- **Type safety** - ensure references are IRIs, content is literal
+- **Data integrity** - validate node types match expected patterns
+- **Schema validation** - enforce proper RDF node kind constraints
+
+**Key advantages:**
+- ✅ **Type checking** - validates node kinds at the semantic level
+- ✅ **Data quality** - ensures proper node type usage
+- ✅ **Schema enforcement** - maintains RDF graph integrity
+
+---
+
+## 🎯 Real-World Examples
+
+### **Document Management:**
+```md
+# Document content must be literal, references must be IRI
+{+ex:content ?sh:path ?sh:Literal ?sh:nodeKind}
+{+ex:reference ?sh:path ?sh:IRI ?sh:nodeKind}
+```
+
+### **API Endpoints:**
+```md
+# API URLs must be IRIs, response bodies must be literals
+{+ex:endpoint ?sh:path ?sh:IRI ?sh:nodeKind}
+{+ex:response ?sh:path ?sh:Literal ?sh:nodeKind}
+```
+
+### **User Profiles:**
+```md
+# User IDs must be IRIs, names must be literals
+{+ex:userId ?sh:path ?sh:IRI ?sh:nodeKind}
+{+ex:userName ?sh:path ?sh:Literal ?sh:nodeKind}
+```
 
 ---
 

@@ -1,0 +1,67 @@
+[mdld] <https://mdld.js.org/>
+[cat] <mdld:shacl/>
+[class] <cat:class/>
+[ex] <cat:example/js/>
+[xsd] <http://www.w3.org/2001/XMLSchema#>
+
+# JavaScript Function {=sh:js .class:Constraint label} Demo
+
+## Demo {=ex:demo}
+
+### 📋 Test Data {=ex:data .Container}
+
+#### Valid Event {=ex:ValidEvent .ex:Event ?member}
+
+Event Date: [2024-12-25] {ex:eventDate ^^xsd:date}
+
+#### Invalid Event 1 {=ex:InvalidEvent1 .ex:Event ?member}
+
+Event Date: [not-a-date] {ex:eventDate}
+
+#### Invalid Event 2 {=ex:InvalidEvent2 .ex:Event ?member}
+
+Event Date: [2024-13-45] {ex:eventDate ^^xsd:date}
+
+#### Invalid Event 3 {=ex:InvalidEvent3 .ex:Event ?member}
+
+Event Date: [] {ex:eventDate}
+
+---
+
+
+## 🛡️ Self-Validating Demo {=ex:demo ?cat:hasDemo}
+
+### Date Validation Shape {=ex:DateValidationShape .sh:NodeShape ?cat:hasShape label} 
+
+All [Events] {+ex:Event ?sh:targetClass} are checked.
+
+#### Event date must be a valid date string {=ex:DatePropertyShape .sh:PropertyShape ?sh:property sh:message}
+
+Must have an [eventDate] {+ex:eventDate ?sh:path} that is a valid JS date.
+
+~~~~~~js {=ex:DateJSConstraint ?sh:JSConstraint sh:js}
+// Check if value is a valid date string
+const date = new Date(value);
+return !isNaN(date.getTime());
+~~~~~~
+
+---
+
+
+[Demo] {=ex:demo} must produce exactly **3** {cat:expectsViolations ^^xsd:integer} violations.
+
+### Expected Validation Results {=ex:results ?cat:hasResults}
+
+1. **Valid Event** - passes (valid date string)
+2. **Invalid Event 1** - fails ("not-a-date" is not a valid date)
+3. **Invalid Event 2** - fails ("2024-13-45" has invalid month/day)
+4. **Invalid Event 3** - fails (empty string is not a valid date)
+
+### 🔍 **Test Validation**
+
+```bash
+# This should show 3 violations for invalid dates
+ig-cli validate ./constraints/js.md
+```
+
+---

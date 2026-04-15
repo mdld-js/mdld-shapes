@@ -11,22 +11,6 @@
 
 ---
 
-## Demo {=ex:demo ?cat:hasDemo}
-
-This demo demonstrates semantic message design using complex business validation scenarios.
-
-### Shape
-
-The **Business Rule Validation Shape** {=ex:BusinessRuleValidationShape .sh:NodeShape ?cat:hasShape label} targets all [contracts] {+ex:Contract ?sh:targetClass} to validate complex business requirements: **Contract Value Rule** {+ex:ContractValueRule ?sh:property label} and  **Approval Date Rule** {+ex:ApprovalDateRule ?sh:property label}.
-
-### Rules
-
-**Contract value must be positive for financial compliance** {=ex:ContractValueRule .sh:PropertyShape sh:message} ensures [contract value] {+ex:contractValue ?sh:path} is greater than [0] {sh:minInclusive ^^xsd:decimal}.
-
-**Contract must be approved before start date** {=ex:ApprovalDateRule .sh:PropertyShape sh:message}: [approval date] {+ex:approvalDate ?sh:path} is [before start date] {+ex:startDate ?sh:lessThan}.
-
-
-## 📋 Test Data {=ex:data .Container}
 
 ### Valid Contract {=ex:ValidContract .ex:Contract}
 

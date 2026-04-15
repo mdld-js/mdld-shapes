@@ -80,7 +80,7 @@ Some parts are still completely uncovered and don't work even on ttl or pure qua
 
 ## JavaScript Constraints
 
-- [JavaScript Function](./constraints/js.md) {+sh:js ?cat:includes .class:JSConstraint}
+- [JavaScript Function](./js.md) {+sh:js ?cat:includes .class:JSConstraint}
 - JS Function Name {+sh:jsFunctionName ?cat:includes .class:JSConstraint .cat:notCovered}
 - JS Library {+sh:jsLibrary ?cat:includes .class:JSConstraint .cat:notCovered}
 - JS Library URL {+sh:jsLibraryURL ?cat:includes .class:JSConstraint .cat:notCovered}
@@ -113,13 +113,4 @@ Need to check if these are working:
 
 ---
 
-
 ## Some constraints are environment dependent, are not tested to be working and are [Not covered] {=cat:notCovered .Class label} by this calalog.
-
-## 🚀 Getting Started
-
-Each constraint includes:
-- ✅ **Valid examples** that pass validation
-- ❌ **Invalid examples** with expected violations
-- 📝 **MDLD syntax** patterns for authoring
-- 🔍 **ig-cli validation** commands

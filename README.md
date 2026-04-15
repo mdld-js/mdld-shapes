@@ -12,7 +12,7 @@ The MDLD Shapes catalog is a **breakthrough proof-of-concept** that demonstrates
 
 - **📚 Documentation = Validation Rules** - No more separation between human docs and machine validation
 - **🎯 W3C Standards Aligned** - Full SHACL specification compliance with RDF export
-- **🔧 Production Ready** - Comprehensive constraint catalog with live validation examples
+- **🔧 Production Ready** - Comprehensive constraint catalog with clean ontology separation
 - **📖 Educational** - Learn SHACL through interactive, self-documenting examples
 
 ## ✨ Key Features
@@ -40,10 +40,12 @@ requires the [manager] {+ex:manager ?sh:path} property to be an instance of [Per
 
 ## 📊 Catalog Statistics
 
-- **32 files** with **2,310 RDF quads**
-- **168 SHACL shapes** across **31 graphs**
-- **23 constraint examples** with **28 test cases**
+- **Sidecar organization** - Ontology (.md) and demo (.demo.md) files in same folders
+- **23 constraint types** with working examples and test data
+- **75% SHACL specification coverage** including value types, cardinality, ranges, patterns
 - **4 targeting mechanisms** for flexible validation
+- **Clean ontology assembly** - 0 violations (production-ready)
+- **Demo assembly** - 103+ violations (development/testing)
 
 ## 🚀 Quick Start
 
@@ -57,12 +59,46 @@ mv ig-cli.js /usr/local/bin/ig-cli
 
 # Explore the catalog
 ig-cli stats
-ig-cli validate ./constraints/class.md
+ig-cli validate ./constraints/class.demo.md
 ig-cli get entity https://mdld.js.org/shacl/example/class/InvalidEmployee
 ```
 
 ### Option 2: View with Intelligraphs
 👉 [Open in Intelligraphs App](https://app.intelligraphs.com/#/?clone=https://github.com/davay42/mdld-shapes.git)
+
+## 📁 Repository Structure
+
+### **Sidecar Organization**
+The catalog uses a sidecar file organization where ontology and demo content are kept together in the same folders:
+
+```
+mdld-shapes/
+├── constraints/
+│   ├── class.md              # Ontology: constraint definition
+│   ├── class.demo.md         # Demo: test data and violations
+│   ├── datatype.md           # Ontology
+│   ├── datatype.demo.md      # Demo
+│   └── ...
+├── targeting/
+│   ├── targetClass.md        # Ontology
+│   ├── targetClass.demo.md   # Demo
+│   └── ...
+├── index.md                 # Main catalog (links to both)
+├── index.ontology.md        # Ontology-only catalog
+├── index.demo.md            # Demo-only catalog
+└── assemble.js              # Unified assembly script (all/ontology/demo modes)
+```
+
+### **Assembly Outputs**
+- **`shacl.md`** - Complete catalog (ontology + demo data) - 162+ violations
+- **`shacl-ontology.md`** - Clean ontology only - 0 violations (production-ready)
+- **`shacl-demo.md`** - Demo data only - 103+ violations (development/testing)
+
+### **Assembly Script**
+- **`assemble.js`** - Automatically assembles all 3 catalogs:
+  ```bash
+  node assemble.js  # Assembles all: shacl.md, shacl-ontology.md, shacl-demo.md
+  ```
 
 ## 📚 Explore the Catalog
 
@@ -86,16 +122,27 @@ Select which nodes to validate:
 
 ## 💡 Usage Examples
 
+### Assemble the Catalog
+```bash
+# Assemble all catalogs automatically
+node assemble.js
+# Produces: shacl.md, shacl-ontology.md, shacl-demo.md
+```
+
 ### Validate Data Quality
 ```bash
-# Check all constraint examples
-ig-cli validate ./constraints/
+# Test individual demo files
+ig-cli validate ./constraints/class.demo.md
+ig-cli validate ./targeting/targetClass.demo.md
 
-# Test specific constraint type
-ig-cli validate ./constraints/pattern.md
+# Validate assembled demo catalog
+ig-cli validate ./shacl-demo.md
+
+# Validate clean ontology (should have 0 violations)
+ig-cli validate ./shacl-ontology.md
 
 # Get detailed entity information
-ig-cli get entity https://mdld.js.org/shacl/example/range/ValidEvent
+ig-cli get entity https://mdld.js.org/shacl/example/class/InvalidEmployee
 ```
 
 ### Query Validation Rules
@@ -157,6 +204,26 @@ ig-cli dump --format=ttl > shapes.ttl
 - [ ] Integration with popular RDF stores
 - [ ] Visual constraint editor
 - [ ] Automated constraint generation from schemas
+
+## 🧹 Current State
+
+### **Recent Changes**
+- **✅ Sidecar organization** - Restructured from separate ontology/demo folders to sidecar files (`.md` + `.demo.md`)
+- **✅ Clean ontology** - Assembly produces 0 violations, safe for production use
+- **✅ Fixed RDF list collisions** - Unique identifiers prevent assembly conflicts
+- **✅ Separated concerns** - Ontology definitions and test data now properly separated
+
+### **File Organization**
+- **Main files (`.md`)** - Ontology definitions, syntax patterns, use cases
+- **Demo files (`.demo.md`)** - Test data, shapes, expected violations, validation commands
+- **Assembly scripts** - Separate scripts for ontology-only and demo-only assemblies
+- **Index files** - Different entry points for different assembly needs
+
+### **Validation Status**
+- ✅ **Ontology assembly** - 0 violations (clean, production-ready)
+- ✅ **Demo assembly** - 103+ violations (comprehensive test coverage)
+- ✅ **Individual demos** - All demo files validate correctly
+- ✅ **Complete assembly** - 162+ violations (combined reference)
 
 
 ### Development Setup
