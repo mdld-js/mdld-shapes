@@ -13,5 +13,6 @@ This catalog [includes] {+cat:includes .rdf:Property label} all constraints and 
 [Getting Started](./teach/getting-started.md)
 [Choosing Constraints](./teach/choosing-constraints.md)
 [Practical Workflow](./teach/practical-workflow.md)
+[Advanced Techniques](./teach/advanced.md)
 [Targeting](./targeting/index.md)
 [Constraints](./constraints/index.md)
