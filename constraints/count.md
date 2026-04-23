@@ -18,23 +18,30 @@
 
 ## 📋 Quick Start Pattern
 
+Count constraints specify the minimum and maximum number of values a property must have. This example validates that email must be exactly one value.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:count/>
 
-**Email must be exactly one** {=ex:#emailExact .sh:PropertyShape}
-[email] {+ex:email ?sh:path} must have exactly [1] {sh:minCount sh:maxCount ^^xsd:integer} value.
+## Person Test Shape {=ex:PersonTestShape .sh:NodeShape ?cat:hasShape sh:name}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with **email** {+ex:#emailExact ?sh:property sh:name}.
+
+**Email must be exactly one** {=ex:#emailExact .sh:PropertyShape sh:message} requires [email] {+ex:email ?sh:path} to have exactly [1] {sh:minCount sh:maxCount ^^xsd:integer} value.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Person {=ex:ValidPerson ?member}
+### Valid Person {=ex:ValidPerson ?member}
 Email: [work@example.com] {ex:email}
 
-#### Invalid Person {=ex:InvalidPerson ?member}
+### Invalid Person {=ex:InvalidPerson ?member}
 Email: [work@example.com] {ex:email}
 Email: [personal@example.com] {ex:email}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidPerson fails because it has two emails instead of one)
 
 ---
 

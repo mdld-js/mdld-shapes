@@ -13,24 +13,31 @@
 
 ## 📋 Quick Start Pattern
 
+Comparison constraints validate property values against reference nodes using comparison operators. This example validates that order dates must be before shipping dates.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:comparison/>
 
-**Order date must be before shipping date** {=ex:#orderDateRule .sh:PropertyShape}
-[order date] {+ex:orderDate ?sh:path} must be before [shipping date] {+ex:shippingDate ?sh:lessThan}.
+## Order Test Shape {=ex:OrderTestShape .sh:NodeShape ?cat:hasShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with **order date before shipping date** {+ex:#orderDateRule ?sh:property sh:name}.
+
+**Order date must be before shipping date** {=ex:#orderDateRule .sh:PropertyShape sh:message} requires [order date] {+ex:orderDate ?sh:path} to be before [shipping date] {+ex:shippingDate ?sh:lessThan}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Order {=ex:ValidOrder ?member}
+### Valid Order {=ex:ValidOrder ?member}
 Order Date: [2024-06-15] {ex:orderDate ^^xsd:date}
 Shipping Date: [2024-06-20] {ex:shippingDate ^^xsd:date}
 
-#### Invalid Order {=ex:InvalidOrder ?member}
+### Invalid Order {=ex:InvalidOrder ?member}
 Order Date: [2024-06-25] {ex:orderDate ^^xsd:date}
 Shipping Date: [2024-06-20] {ex:shippingDate ^^xsd:date}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidOrder fails because order date is after shipping date)
 
 ---
 

@@ -11,26 +11,33 @@
 
 ## 📋 Quick Start Pattern
 
+The node constraint requires property values to conform to a specific node shape. This example validates that employee addresses must conform to an AddressShape with minimum street length.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:node/>
 
-**Employee must have valid address** {=ex:#addressRule .sh:PropertyShape}
-[address] {+ex:address ?sh:path} must conform to [Address Shape] {+ex:AddressShape ?sh:node}.
+## Employee Validation Shape {=ex:EmployeeValidationShape .sh:NodeShape ?cat:hasShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities to have correct **address** {+ex:#addressRule ?sh:property sh:name}.
+
+**Employee must have valid address** {=ex:#addressRule .sh:PropertyShape sh:message} requires [address] {+ex:address ?sh:path} to conform to [Address Shape] {+ex:AddressShape ?sh:node}.
 
 **Address Shape** {=ex:AddressShape .sh:NodeShape} requires [street] {+ex:street ?sh:path} to have at least [5] {sh:minLength ^^xsd:integer} characters.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Employee {=ex:ValidEmployee ?member}
+### Valid Employee {=ex:ValidEmployee ?member}
 Address: [Valid Address] {=ex:ValidAddress .ex:Address ?ex:address}
 Street: [Main Street] {ex:street}
 
-#### Invalid Employee {=ex:InvalidEmployee ?member}
+### Invalid Employee {=ex:InvalidEmployee ?member}
 Address: [Short Address] {=ex:ShortAddress .ex:Address ?ex:address}
 Street: [St] {ex:street}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidEmployee fails because address doesn't conform to AddressShape - street is too short)
 
 ---
 

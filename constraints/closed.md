@@ -13,37 +13,41 @@
 
 ## 📋 Quick Start Pattern
 
+The closed constraint enables closed world validation where only explicitly declared properties are allowed. This example validates that person data can only have declared properties (name, age).
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:closed/>
 [schema] <http://schema.org/>
 
-### Shape Definition
+## Person Data Demo
 
-**Only declared properties allowed** {=ex:ClosedExampleShape .sh:NodeShape ?cat:hasShape label} with **no additional properties** {sh:closed}.
+**Only declared properties allowed** {=ex:ClosedExampleShape .sh:NodeShape label} targets [ValidPerson] {+ex:ValidPerson ?sh:targetNode} and [InvalidPerson] {+ex:InvalidPerson ?sh:targetNode} with **no additional properties** {sh:closed} constraint except [Name] {+ex:NameProperty ?sh:property sh:name} and [Age] {+ex:AgeProperty ?sh:property sh:name}.
 
-**Person must have a name** {=ex:NameProperty .sh:PropertyShape sh:message}
-[name] {+schema:name ?sh:path} is [string] {+xsd:string ?sh:datatype} and [1] {sh:minCount}.
+**Person must have a name** {=ex:NameProperty .sh:PropertyShape sh:message} ensures [name] {+schema:name ?sh:path} is [string] {+xsd:string ?sh:datatype} and [1] {sh:minCount ^^xsd:integer}.
 
-**Person must have exactly one age** {=ex:AgeProperty .sh:PropertyShape sh:message}
-[age] {+ex:age ?sh:path} is [integer] {+xsd:integer ?sh:datatype} and exactly [1] {sh:minCount sh:maxCount}.
+**Person must have exactly one age** {=ex:AgeProperty .sh:PropertyShape sh:message} ensures [age] {+ex:age ?sh:path} is [integer] {+xsd:integer ?sh:datatype} and exactly [1] {sh:minCount sh:maxCount ^^xsd:integer}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Person {=ex:ValidPerson}
+### Valid Person {=ex:ValidPerson}
+
+Person with only declared properties.
+
 Name: [John Doe] {schema:name ^^xsd:string}
 Age: [30] {ex:age ^^xsd:integer}
 
-#### Invalid Person {=ex:InvalidPerson}
+### Invalid Person {=ex:InvalidPerson}
+
+Person with undeclared property (violates closed world constraint).
+
 Name: [Jane Smith] {schema:name ^^xsd:string}
 Age: [25] {ex:age ^^xsd:integer}
 Email: [<jane@example.com>] {ex:email}
-
----
-
-[Demo] {=ex:demo} must produce exactly **1** violation.
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidPerson fails because it has undeclared email property)
 
 ---
 

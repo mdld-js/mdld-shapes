@@ -11,22 +11,29 @@
 
 ## 📋 Quick Start Pattern
 
+The class constraint ensures property values are instances of a specific RDF class. This example validates that employee managers must be Person instances.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:class/>
 
-**Manager must be a Person instance** {=ex:#managerClass .sh:PropertyShape}
-[manager] {+ex:manager ?sh:path} must be an instance of [Person] {+ex:Person ?sh:class}
+## Employee Test Shape {=ex:EmployeeTestShape .sh:NodeShape ?cat:hasShape label}
+
+All [employees] {+member ?sh:targetObjectsOf} must have **manager** {+ex:#managerClass ?sh:property sh:name} class assigned.
+
+**Manager must be a Person instance** {=ex:#managerClass .sh:PropertyShape sh:message} requires the [manager] {+ex:manager ?sh:path} property to be an instance of a [Person] {+ex:Person ?sh:class}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Employee {=ex:ValidEmployee ?member}
+### Valid Employee {=ex:ValidEmployee ?member}
 Manager: [john] {+ex:john ?ex:manager .ex:Person}
 
-#### Invalid Employee {=ex:InvalidEmployee ?member}
+### Invalid Employee {=ex:InvalidEmployee ?member}
 Manager: [robot] {+ex:robot ?ex:manager ex:Role}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidEmployee fails because manager is not a Person)
 
 ---
 

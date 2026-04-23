@@ -2,52 +2,49 @@
 [cat] <mdld:shacl/>
 [ex] <mdld:shacl/example/targeting/>
 
-
-# Target Node {=sh:targetNode .class:TargetingMechanism label} Demo
-
-## Demo {=ex:demo ?cat:hasDemo}
+# Target Node Demo {=ex:demo}
 
 This demo demonstrates node-based targeting using critical infrastructure and executive validation scenarios.
 
-### Critical Infrastructure Demo
+## Critical Infrastructure Demo
 
-The **Database Validation Shape** {=ex:DatabaseValidationShape .sh:NodeShape ?cat:hasShape label} targets the [Main Database] {+ex:MainDatabase ?sh:targetNode} for critical infrastructure validation.
+The **Database Validation Shape** {=ex:DatabaseValidationShape .sh:NodeShape ?cat:hasShape label} targets the [Main Database] {+ex:MainDatabase ?sh:targetNode} for critical infrastructure validation: [status] {+#databaseStatus ?sh:property sh:name} and [uptime] {+#databaseUptime ?sh:property sh:name}.
 
-**Database Status Rule** {=ex:#databaseStatus .sh:PropertyShape ?sh:property} requires the [status] {+ex:status ?sh:path} property to be exactly [online] {sh:hasValue}: **Main database must be online** {sh:message}
+**Main database must be online** {=#databaseStatus .sh:PropertyShape sh:message} requires the [status] {+ex:status ?sh:path} property to be exactly [online] {sh:hasValue}
 
-[The shape] {=ex:DatabaseValidationShape} also has **Database Uptime Rule** {=ex:#databaseUptime .sh:PropertyShape ?sh:property} that requires the [uptime] {+ex:uptime ?sh:path} property to be at least [99.9] {sh:minInclusive ^^xsd:decimal}: **Database uptime must be at least 99.9%** {sh:message}
+**Database uptime must be at least 99.9%** {=#databaseUptime .sh:PropertyShapesh:message} that requires the [uptime] {+ex:uptime ?sh:path} property to be at least [99.9] {sh:minInclusive ^^xsd:decimal}
 
-### Executive Validation Demo
+## Executive Validation Demo
 
-**CEO Validation Shape** {=ex:CEOValidationShape .sh:NodeShape ?cat:hasShape label} targets the [CEO] {+ex:CEO ?sh:targetNode} for executive-level validation.
+**CEO Validation Shape** {=ex:CEOValidationShape .sh:NodeShape ?cat:hasShape label} targets the [CEO] {+ex:CEO ?sh:targetNode} for [executive] {+#executiveClearance ?sh:property sh:name} level clearance.
 
-**Executive Clearance Rule** {=ex:#executiveClearance .sh:PropertyShape ?sh:property} requires the [securityClearance] {+ex:securityClearance ?sh:path} property to be exactly [top-secret] {sh:hasValue}: **CEO must have top-secret security clearance** {sh:message}
+**CEO must have top-secret security clearance** {=#executiveClearance .sh:PropertyShape sh:message} requires the [securityClearance] {+ex:securityClearance ?sh:path} property to be exactly [top-secret] {sh:hasValue}.
 
 ---
 
-### 📋 Test Data {=ex:data .Container}
+## 📋 Test Data {=ex:data .Container}
 
-#### Main Database {=ex:MainDatabase}
+### Main Database {=ex:MainDatabase}
 
 Critical infrastructure that should be online with high uptime.
 
 Status: [offline] {ex:status}
 Uptime: [95.5] {ex:uptime ^^xsd:decimal}
 
-#### Backup Database {=ex:BackupDatabase}
+### Backup Database {=ex:BackupDatabase}
 
 Secondary infrastructure (not targeted by node-based validation).
 
 Status: [online] {ex:status}
 Uptime: [99.8] {ex:uptime ^^xsd:decimal}
 
-#### CEO {=ex:CEO}
+### CEO {=ex:CEO}
 
 The chief executive with proper clearance.
 
 Security Clearance: [top-secret] {ex:securityClearance}
 
-#### CFO {=ex:CFO}
+### CFO {=ex:CFO}
 
 The chief financial officer (not targeted by CEO-specific validation).
 
@@ -55,9 +52,9 @@ Security Clearance: [secret] {ex:securityClearance}
 
 ---
 
-{=ex:demo} must produce exactly **3** {cat:expectsViolations ^^xsd:integer} violations.
+[Demo] {=ex:demo} must produce exactly **3** {cat:expectsViolations ^^xsd:integer} violations.
 
-### Expected Validation Results {=ex:results ?cat:hasResults}
+## Expected Validation Results
 
 1. **Main Database** - fails twice (status: offline ≠ online AND uptime: 95.5% < 99.9%)
 2. **Backup Database** - not validated (not targeted by specific node validation)

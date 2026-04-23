@@ -13,38 +13,37 @@
 
 ## 📋 Quick Start Pattern
 
+The severity constraint defines the severity level of validation violations (Info, Warning, Violation). This example demonstrates user account validation with different severity levels for different constraints.
+
 ~~~~~~md
-[ex] <tag:my@example.org,2026:severity/>
+[ex] <tag:my@example.org,2026:range/>
 
-### Shape Definition
+## User Validation Shape {=ex:UserValidationShape .sh:NodeShape label}
 
-**Email address is required and must be valid** {=ex:CriticalRule .sh:PropertyShape sh:message}
-[email] {+ex:email ?sh:path} must be [string] {?xsd:string ?sh:datatype} and at least [1] {sh:minCount ^^xsd:integer} corporate email [example.com] {sh:pattern} with [Violation severity] {+sh:Violation ?sh:severity}.
+Targets all [users] {+ex:User ?sh:targetClass} to validate account requirements with different severity levels: critical **email** {+ex:CriticalRule ?sh:property sh:name}, warning **age** {+ex:WarningRule ?sh:property sh:name} and info **name** {+ex:InfoNameRule ?sh:property sh:name}.
 
-**Age should be between 18 and 120** {=ex:WarningRule .sh:PropertyShape sh:message}
-[age] {+ex:age ?sh:path} must be [integer] {?xsd:integer ?sh:datatype}, more than [18] {sh:minInclusive ^^xsd:integer} and less than [120] {sh:maxInclusive ^^xsd:integer} with [Warning severity] {+sh:Warning ?sh:severity}.
+**Email address is required and must be valid** {=ex:CriticalRule .sh:PropertyShape sh:message} requires [email] {+ex:email ?sh:path} to be [string] {+xsd:string ?sh:datatype} and at least [1] {sh:minCount ^^xsd:integer} corporate email [example.com] {sh:pattern} with [Violation severity] {+sh:Violation ?sh:severity}.
 
-**Name should be a string of 2+ letters** {=ex:InfoNameRule .sh:PropertyShape sh:message}
-[name] {+ex:name ?sh:path} must be [string] {?xsd:string ?sh:datatype} at least [1] {sh:minCount} and longer than [3] {sh:minInclusive} with [Info severity] {+sh:Info ?sh:severity}.
+**Age should be between 18 and 120** {=ex:WarningRule .sh:PropertyShape sh:message} requires [age] {+ex:age ?sh:path} to be [integer] {+xsd:integer ?sh:datatype}, more than [18] {sh:minInclusive ^^xsd:integer} and less than [120] {sh:maxInclusive ^^xsd:integer} with [Warning severity] {+sh:Warning ?sh:severity}.
+
+**Name should be a string of 2+ letters** {=ex:InfoNameRule .sh:PropertyShape sh:message} requires [name] {+ex:name ?sh:path} to be [string] {+xsd:string ?sh:datatype} at least [1] {sh:minCount} and longer than [3] {sh:minInclusive} with [Info severity] {+sh:Info ?sh:severity}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid User {=ex:ValidUser .ex:User ?member}
+### Valid User {=ex:ValidUser .ex:User}
 Email: [user@example.com] {ex:email}
 Age: [25] {ex:age ^^xsd:integer}
 Name: [John Doe] {ex:name}
 
-#### Invalid User {=ex:InvalidUser .ex:User ?member}
+### Invalid User {=ex:InvalidUser .ex:User}
 Email: [invalid-email] {ex:email}
 Age: [150] {ex:age ^^xsd:integer}
 Name: [] {ex:name}
-
----
-
-[Demo] {=ex:demo} must produce exactly **3** violations.
 ~~~~~~
+
+**Expected Result:** 3 violations (InvalidUser fails three times: Critical for invalid email, Warning for age > 120, Info for missing name)
 
 ---
 

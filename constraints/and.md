@@ -11,10 +11,14 @@
 
 ## 📋 Quick Start Pattern
 
+The AND constraint requires all specified constraints to be satisfied. This example validates that products must have both a price and a category.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:and/>
 
-**Product must have price and category** {sh:message}
+## Product Validation Shape {=ex:ProductValidationShape .sh:NodeShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with **Product must have price and category** {sh:message}.
 
 **Constraints List** {=ex:and-l1 ?sh:and .rdf:List}: [Price Required] {+ex:priceRequired ?rdf:first}, then [followed] {=ex:and-l2 ?rdf:rest} by [Category Required] {+ex:categoryRequired ?rdf:first} and [nil] {+rdf:nil ?rdf:rest}. {=}
 
@@ -24,15 +28,17 @@
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Product {=ex:ValidProduct ?member}
+### Valid Product {=ex:ValidProduct ?member}
 Price: [999] {ex:price ^^xsd:integer}
 Category: [Electronics] {ex:category}
 
-#### Invalid Product {=ex:MissingPriceProduct ?member}
+### Invalid Product {=ex:MissingPriceProduct ?member}
 Category: [Electronics] {ex:category}
 ~~~~~~
+
+**Expected Result:** 1 violation (MissingPriceProduct fails because it lacks price)
 
 ---
 

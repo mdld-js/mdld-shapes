@@ -11,22 +11,29 @@
 
 ## 📋 Quick Start Pattern
 
+The message constraint provides human-readable error messages for constraint violations. This example shows a custom violation message for contract value validation.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:message/>
 
-**Contract value must be positive** {=ex:#valueRule .sh:PropertyShape sh:message}
-[contract value] {+ex:contractValue ?sh:path} must be greater than [0] {sh:minInclusive ^^xsd:decimal}.
+## Business Rule Validation Shape {=ex:BusinessRuleValidationShape .sh:NodeShape ?cat:hasShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with positive **contract** {+ex:ContractValueRule ?sh:property sh:name}.
+
+**Contract value must be positive** {=ex:ContractValueRule .sh:PropertyShape sh:message} ensures [contract value] {+ex:contractValue ?sh:path} is greater than [0] {sh:minInclusive ^^xsd:decimal}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Contract {=ex:ValidContract ?member}
+### Valid Contract {=ex:ValidContract ?member}
 Value: [50000.00] {ex:contractValue ^^xsd:decimal}
 
-#### Invalid Contract {=ex:InvalidContract ?member}
+### Invalid Contract {=ex:InvalidContract ?member}
 Value: [-1000.00] {ex:contractValue ^^xsd:decimal}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidContract fails with message "Contract value must be positive")
 
 ---
 

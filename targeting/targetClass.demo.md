@@ -3,36 +3,34 @@
 [ex] <mdld:shacl/example/targeting/>
 
 
-# Target Class {=sh:targetClass .class:TargetingMechanism label} Demo
+# Target Class Demo {=ex:demo} 
 
-## Demo {=ex:demo ?cat:hasDemo}
+This demo demonstrates class-based targeting using a product management scenario where all Product instances are validated for business requirements:
 
-This demo demonstrates class-based targeting using a product management scenario where all Product instances are validated for business requirements.
+The **Product Validation Shape** {=ex:ProductValidationShape .sh:NodeShape ?cat:hasShape label} targets all [Product] {+ex:Product ?sh:targetClass} instances to validate core product requirements: [name] {=#productName ?sh:property sh:name} and [price] {+#productPrice ?sh:property sh:name}.
 
-The **Product Validation Shape** {=ex:ProductValidationShape .sh:NodeShape ?cat:hasShape label} targets all [Product] {+ex:Product ?sh:targetClass} instances to validate core product requirements.
+**Product must have exactly one name** {=#productName .sh:PropertyShape sh:message} requires the [name] {+ex:name ?sh:path} property to have exactly [1] {sh:minCount sh:maxCount ^^xsd:integer} value.
 
-**Product Name Rule** {=ex:#productName .sh:PropertyShape ?sh:property} requires the [name] {+ex:name ?sh:path} property to have exactly [1] {sh:minCount sh:maxCount ^^xsd:integer} value: **Product must have exactly one name** {sh:message}
-
-[The shape] {=ex:ProductValidationShape} also has **Product Price Rule** {=ex:#productPrice .sh:PropertyShape ?sh:property} that requires the [price] {+ex:price ?sh:path} property to be at least [0.01] {sh:minInclusive ^^xsd:decimal}: **Product price must be positive** {sh:message}
+**Product price must be positive** {=#productPrice .sh:PropertyShape sh:message} requires the [price] {+ex:price ?sh:path} property to be at least [0.01] {sh:minInclusive ^^xsd:decimal}
 
 ---
 
-### 📋 Test Data {=ex:data .Container}
+## 📋 Test Data {=ex:data .Container}
 
-#### Laptop {=ex:Laptop .ex:Product}
+### Laptop {=ex:Laptop .ex:Product}
 
 A valid product with name and positive price.
 
 Name: [MacBook Pro] {ex:name}
 Price: [1299.99] {ex:price ^^xsd:decimal}
 
-#### Invalid Product {=ex:InvalidProduct .ex:Product}
+### Invalid Product {=ex:InvalidProduct .ex:Product}
 
 A product with missing name and negative price.
 
 Price: [-50.00] {ex:price ^^xsd:decimal}
 
-#### Service {=ex:Service .ex:Service}
+### Service {=ex:Service .ex:Service}
 
 A service that shouldn't be targeted by product validation.
 
@@ -41,9 +39,9 @@ Price: [200.00] {ex:price ^^xsd:decimal}
 
 ---
 
-{=ex:demo} must produce exactly **2** {cat:expectsViolations ^^xsd:integer} violations.
+[Demo] {=ex:demo} must produce exactly **2** {cat:expectsViolations ^^xsd:integer} violations.
 
-### Expected Validation Results {=ex:results ?cat:hasResults}
+## Expected Validation Results
 
 1. **Laptop** - passes (has name and positive price)
 2. **Invalid Product** - fails twice (missing name AND negative price)

@@ -12,27 +12,33 @@
 
 ## 📋 Quick Start Pattern
 
+The nodeKind constraint expects a node to be of a specific kind (blank node, IRI, or literal). This example validates that content must be literal and references must be IRIs.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:nodekind/>
 
-**Content must be literal** {=ex:#contentLiteral .sh:PropertyShape}
-[content] {+ex:content ?sh:path} must be a [Literal] {+sh:Literal ?sh:nodeKind}.
+## Document Test Shape {=ex:DocumentTestShape .sh:NodeShape ?cat:hasShape label}
 
-**Reference must be IRI** {=ex:#referenceIRI .sh:PropertyShape}
-[reference] {+ex:reference ?sh:path} must be an [IRI] {+sh:IRI ?sh:nodeKind}.
+Validates [Valid Document] {+ex:ValidDocument ?sh:targetNode} and [Invalid Document] {+ex:InvalidDocument ?sh:targetNode} with literal **content** {+ex:#contentLiteral ?sh:property sh:name} and IRI for **reference** {+ex:#referenceIRI ?sh:property sh:name}.
+
+**Content must be literal** {=ex:#contentLiteral .sh:PropertyShape sh:message} requires [content] {+ex:content ?sh:path} to be a [Literal] {+sh:Literal ?sh:nodeKind}.
+
+**Reference must be IRI** {=ex:#referenceIRI .sh:PropertyShape sh:message} requires [reference] {+ex:reference ?sh:path} to be an [IRI] {+sh:IRI ?sh:nodeKind}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Document {=ex:ValidDocument ?member}
+### Valid Document {=ex:ValidDocument ?member}
 Content: [text] {ex:content}
 Reference: <https://example.org> {?ex:reference}
 
-#### Invalid Document {=ex:InvalidDocument ?member}
+### Invalid Document {=ex:InvalidDocument ?member}
 Content: <https://example.org> {?ex:content}
 Reference: [text] {ex:reference}
 ~~~~~~
+
+**Expected Result:** 2 violations (InvalidDocument fails twice: content is IRI not literal, reference is text not IRI)
 
 ---
 

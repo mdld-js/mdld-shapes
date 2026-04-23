@@ -12,22 +12,29 @@
 
 ## 📋 Quick Start Pattern
 
+The datatype constraint ensures literal values have the correct datatype. This example validates that product prices must be decimal values.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:datatype/>
 
-**Price must be decimal** {=ex:#priceDecimal .sh:PropertyShape}
-[price] {+ex:price ?sh:path} must be a [decimal] {+xsd:decimal ?sh:datatype} value.
+## Product Test Shape {=ex:ProductTestShape .sh:NodeShape sh:name}
+
+Validates [Valid Product] {+ex:ValidProduct ?sh:targetNode} and [Invalid Product] {+ex:InvalidProduct ?sh:targetNode} with **price** {+ex:#priceDecimal ?sh:property sh:name}.
+
+**Price must be decimal** {=ex:#priceDecimal .sh:PropertyShape sh:message} requires the [price] {+ex:price ?sh:path} property to be a [decimal] {+xsd:decimal ?sh:datatype} value.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Product {=ex:ValidProduct ?member}
+### Valid Product {=ex:ValidProduct ?member}
 Price: [29.99] {ex:price ^^xsd:decimal}
 
-#### Invalid Product {=ex:InvalidProduct ?member}
+### Invalid Product {=ex:InvalidProduct ?member}
 Price: [29.99] {ex:price ^^xsd:string}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidProduct fails because price is string, not decimal)
 
 ---
 

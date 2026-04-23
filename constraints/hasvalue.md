@@ -11,22 +11,29 @@
 
 ## 📋 Quick Start Pattern
 
+The hasValue constraint requires a property to have exactly a specific value. This example validates that server status must be exactly "active".
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:hasvalue/>
 
-**Status must be active** {=ex:#statusRequired .sh:PropertyShape}
-[status] {+ex:status ?sh:path} must be exactly [active] {sh:hasValue}.
+## System Status Test Shape {=ex:SystemStatusTestShape .sh:NodeShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with active **status** {+ex:#statusRequired ?sh:property sh:name}.
+
+**Status must be active** {=ex:#statusRequired .sh:PropertyShape sh:message} requires [status] {+ex:status ?sh:path} to be exactly [active] {sh:hasValue ^^xsd:string}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Server {=ex:MainServer ?member}
+### Valid Server {=ex:MainServer ?member}
 Status: [active] {ex:status}
 
-#### Invalid Server {=ex:BackupServer ?member}
+### Invalid Server {=ex:BackupServer ?member}
 Status: [standby] {ex:status}
 ~~~~~~
+
+**Expected Result:** 1 violation (BackupServer fails because status is standby, not active)
 
 ---
 

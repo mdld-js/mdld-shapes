@@ -12,22 +12,29 @@
 
 ## 📋 Quick Start Pattern
 
+The pattern constraint validates string values against regular expression patterns. This example validates that emails must end with example.com.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:pattern/>
 
-**Email must end with example.com** {=ex:EmailPatternConstraint .sh:PropertyShape}
-[email] {+ex:email ?sh:path} must match [example\.com$] {sh:pattern} with [i] {sh:flags}.
+## Email Validation Shape {=ex:PatternExampleShape .sh:NodeShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with corporate **email** {+ex:EmailPatternConstraint ?sh:property sh:name}.
+
+**Email must end with example.com** {=ex:EmailPatternConstraint .sh:PropertyShape sh:message} requires [email] {+ex:email ?sh:path} to match [example\.com$] {sh:pattern} with [i] {sh:flags}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Email {=ex:ValidEmail ?member}
+### Valid Email {=ex:ValidEmail ?member}
 Email: [user@example.com] {ex:email}
 
-#### Invalid Email {=ex:InvalidEmail ?member}
+### Invalid Email {=ex:InvalidEmail ?member}
 Email: [user@example.org] {ex:email}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidEmail fails because it doesn't match the pattern - ends with .org not .com)
 
 ---
 

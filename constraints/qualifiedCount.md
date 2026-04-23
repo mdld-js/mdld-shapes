@@ -12,24 +12,31 @@
 
 ## 📋 Quick Start Pattern
 
+Qualified count constraints apply count constraints only to values that meet additional shape criteria. This example validates that employees must have exactly one work email (matching the WorkEmailShape pattern).
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:qualified/>
 
-**Employee must have exactly one work email** {=ex:#workEmailRule .sh:PropertyShape}
-[email] {+ex:email ?sh:path} must have exactly [1] {sh:qualifiedMinCount sh:qualifiedMaxCount ^^xsd:integer} work email matching **Work Email Shape** {=ex:WorkEmailShape .sh:NodeShape ?sh:qualifiedValueShape}.
+## Employee Validation Shape {=ex:EmployeeValidationShape .sh:NodeShape ?cat:hasShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with one work **email** {+ex:#workEmailRule ?sh:property sh:name}.
+
+**Employee must have exactly one work email** {=ex:#workEmailRule .sh:PropertyShape sh:message} requires [email] {+ex:email ?sh:path} to have exactly [1] {sh:qualifiedMinCount sh:qualifiedMaxCount ^^xsd:integer} work email matching **Work Email Shape** {=ex:WorkEmailShape .sh:NodeShape ?sh:qualifiedValueShape}.
 
 **Work Email Shape** {=ex:WorkEmailShape .sh:NodeShape} must be a [literal] {+sh:Literal ?sh:nodeKind} with pattern [company.org] {sh:pattern}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Employee {=ex:ValidEmployee ?member}
+### Valid Employee {=ex:ValidEmployee ?member}
 Email: [john@company.org] {ex:email}
 
-#### Invalid Employee {=ex:NoWorkEmployee ?member}
+### Invalid Employee {=ex:NoWorkEmployee ?member}
 Email: [bob@gmail.com] {ex:email}
 ~~~~~~
+
+**Expected Result:** 1 violation (NoWorkEmployee fails because it has 0 work emails - the email doesn't match the WorkEmailShape pattern)
 
 ---
 

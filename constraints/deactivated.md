@@ -11,24 +11,33 @@
 
 ## 📋 Quick Start Pattern
 
+The deactivated constraint temporarily disables specific constraints during validation. This example shows a deactivated category rule while the status rule remains active.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:deactivated/>
 
-**User status must be active** {=ex:ActiveProperty .sh:PropertyShape}
-[status] {+ex:status ?sh:path} must be [active] {sh:hasValue}.
+## Deactivated Example Shape {=ex:DeactivatedExampleShape .sh:NodeShape label}
 
-**Category rule** {=ex:DeactivatedProperty .sh:PropertyShape} is [deactivated] {sh:deactivated}.
+Validates all **member** {+member ?sh:targetObjectsOf} entities to be an active *user* {+ex:ActiveProperty ?sh:property sh:name} and have an active *category* {+ex:CategoryProperty ?sh:property sh:name}.
+
+**User status must be active** {=ex:ActiveProperty .sh:PropertyShape sh:message} requires [status] {+ex:status ?sh:path} to be [active] {sh:hasValue}.
+
+**Category rule** {=ex:DeactivatedProperty .sh:PropertyShape sh:message} requires [category] {+ex:category ?sh:path} to be [active] {sh:hasValue}. This rule is temporarily [deactivated] {sh:deactivated}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Account {=ex:ValidNode ?member}
+### Valid Account {=ex:ValidNode ?member}
 Status: [active] {ex:status}
+Category: [active] {ex:status}
 
-#### Invalid Account {=ex:InvalidNode ?member}
+### Invalid Account {=ex:InvalidNode ?member}
 Status: [inactive] {ex:status}
+Category: [inactive] {ex:status}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidAccount fails because status is inactive; category rule is deactivated so it doesn't cause a violation)
 
 ---
 

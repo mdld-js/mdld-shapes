@@ -11,24 +11,31 @@
 
 ## 📋 Quick Start Pattern
 
+The uniqueLang constraint ensures that language tags of string literals are unique within a property. This example validates that document titles cannot have duplicate language tags.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:uniqueLang/>
 
-**Each language tag must appear only once** {=ex:UniqueLangExampleShape .sh:NodeShape}
-[title] {+ex:title ?sh:path} values have [true] {sh:uniqueLang ^^xsd:boolean}.
+## Unique Language Example Shape {=ex:UniqueLangExampleShape .sh:NodeShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with unique **language** {+ex:TitleProperty ?sh:property sh:name}.
+
+**Each language tag must appear only once** {=ex:TitleProperty .sh:PropertyShape sh:message} requires [title] {+ex:title ?sh:path} values to have [true] {sh:uniqueLang ^^xsd:boolean}.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid Document {=ex:ValidNode ?member}
+### Valid Document {=ex:ValidNode ?member}
 Title: [Hello World] {ex:title @en}
 Title: [Bonjour Monde] {ex:title @fr}
 
-#### Invalid Document {=ex:InvalidNode ?member}
+### Invalid Document {=ex:InvalidNode ?member}
 Title: [Hello World] {ex:title @en}
 Title: [Hola Mundo] {ex:title @en}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidDocument fails because it has duplicate @en language tags)
 
 ---
 

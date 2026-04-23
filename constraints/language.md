@@ -11,24 +11,29 @@
 
 ## 📋 Quick Start Pattern
 
+The languageIn constraint constrains string literals to have language tags from a specified list. This example validates that document titles must be in English or French.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:language/>
 
-**Title language must be en or fr** {=ex:#titleLanguage .sh:PropertyShape}
-[title] {+ex:title ?sh:path} language tags must be in allowed list.
+## Multilingual Document Shape {=ex:MultilingualDocumentShape .sh:NodeShape ?cat:hasShape label}
 
-**Allowed Languages List** {=ex:lang-l1 ?sh:languageIn .rdf:List}: [en] {rdf:first}, then [rest] {=ex:lang-l2 ?rdf:rest} by [fr] {rdf:first} and [nil] {+rdf:nil ?rdf:rest}. {=}
+Validates all [member] {+member ?sh:targetObjectsOf} entities with english or french **title** {+ex:#titleLanguage ?sh:property sh:name}.
+
+**Title language must be en or fr** {=ex:#titleLanguage .sh:PropertyShape sh:message} requires [title] {+ex:title ?sh:path} language tags to be in the **Allowed Languages List** {=ex:lang-l1 ?sh:languageIn .rdf:List}: **en** {rdf:first},  [or] {=ex:lang-l2 ?rdf:rest} **fr** {rdf:first} - [only these 2 languages are allowed] {+rdf:nil ?rdf:rest}. {=}
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### English Document {=ex:EnglishDocument ?member}
+### English Document {=ex:EnglishDocument ?member}
 Title: [Hello World] {ex:title @en}
 
-#### Invalid Document {=ex:GermanDocument ?member}
+### Invalid Document {=ex:GermanDocument ?member}
 Title: [Hallo Welt] {ex:title @de}
 ~~~~~~
+
+**Expected Result:** 1 violation (GermanDocument fails because title language is de, not in the allowed list)
 
 ---
 

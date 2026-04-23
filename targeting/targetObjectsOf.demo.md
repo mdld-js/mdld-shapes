@@ -2,28 +2,25 @@
 [cat] <mdld:shacl/>
 [ex] <mdld:shacl/example/targeting/>
 
-
-# Target Objects Of {=sh:targetObjectsOf .class:TargetingMechanism label} Demo
-
-## Demo {=ex:demo ?cat:hasDemo}
+# Target Objects Of Demo {=ex:demo .Container}
 
 This demo demonstrates object-based targeting using team membership and product reference scenarios where we validate entities that are referenced by others.
 
 ### Team Membership Demo
 
-The **Team Member Validation Shape** {=ex:TeamMemberValidationShape .sh:NodeShape ?cat:hasShape label} targets all [team members] {+ex:memberOf ?sh:targetObjectsOf} to validate team membership requirements.
+The **Team Member Validation Shape** {=ex:TeamMemberValidationShape .sh:NodeShape label} targets all [team members] {+ex:memberOf ?sh:targetObjectsOf} to validate team membership requirements: [workload] {+#workloadRule ?sh:property sh:name} and [status] {+#activeStatus ?sh:property sh:name}.
 
-**Workload Rule** {=ex:#workloadRule .sh:PropertyShape ?sh:property} requires the [workload] {+ex:workload ?sh:path} property to be at most [40] {sh:maxInclusive ^^xsd:integer}: **Team members must not exceed 40 hours workload** {sh:message}
+**Team members must not exceed 40 hours workload** {=#workloadRule .sh:PropertyShape sh:message} requires the [workload] {+ex:workload ?sh:path} property to be at most [40] {sh:maxInclusive ^^xsd:integer}.
 
-[The shape] {=ex:TeamMemberValidationShape} also has **Active Status Rule** {=ex:#activeStatus .sh:PropertyShape ?sh:property} that requires the [status] {+ex:status ?sh:path} property to be exactly [active] {sh:hasValue}: **Team members must be active** {sh:message}
+**Team members must be active** {=#activeStatus .sh:PropertyShape sh:message} that requires the [status] {+ex:status ?sh:path} property to be exactly [active] {sh:hasValue}.
 
 ### Product Reference Demo
 
-**Referenced Product Validation Shape** {=ex:ReferencedProductValidationShape .sh:NodeShape ?cat:hasShape label} targets all [referenced products] {+ex:references ?sh:targetObjectsOf} to validate product reference requirements.
+**Referenced Product Validation Shape** {=ex:ReferencedProductValidationShape .sh:NodeShape label} targets all [referenced products] {+ex:references ?sh:targetObjectsOf} to validate product reference requirements: [availability] {+#productAvailability ?sh:property sh:name} and [price] {+#productPrice ?sh:property sh:name}.
 
-**Product Availability Rule** {=ex:#productAvailability .sh:PropertyShape ?sh:property} requires the [available] {+ex:available ?sh:path} property to be exactly [true] {sh:hasValue}: **Referenced products must be available** {sh:message}
+**Referenced products must be available** {=#productAvailability .sh:PropertyShape sh:message} requires the [available] {+ex:available ?sh:path} property to be exactly [true] {sh:hasValue}.
 
-{=ex:ReferencedProductValidationShape} also has **Product Price Rule** {=ex:#productPrice .sh:PropertyShape ?sh:property} that requires the [price] {+ex:price ?sh:path} property to be at most [1000.00] {sh:maxInclusive ^^xsd:decimal}: **Referenced products must cost $1000 or less** {sh:message}
+**Referenced products must cost $1000 or less** {=#productPrice .sh:PropertyShape sh:message} that requires the [price] {+ex:price ?sh:path} property to be at most [1000.00] {sh:maxInclusive ^^xsd:decimal}.
 
 ---
 
@@ -79,7 +76,7 @@ Available: [true] {ex:available}
 
 {=ex:demo} must produce exactly **4** {cat:expectsViolations ^^xsd:integer} violations.
 
-### Expected Validation Results {=ex:results ?cat:hasResults}
+### Expected Validation Results 
 
 #### Team Membership Validation (objects of memberOf):
 1. **Senior Developer** - fails twice (workload 45 > 40 AND status: inactive ≠ active)

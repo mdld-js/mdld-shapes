@@ -17,22 +17,29 @@
 
 ## 📋 Quick Start Pattern
 
+Length constraints specify the minimum and maximum length of string values. This example validates that usernames must be between 3 and 20 characters.
+
 ~~~~~~md
 [ex] <tag:my@example.org,2026:length/>
 
-**Username must be 3-20 characters** {=ex:#usernameLength .sh:PropertyShape}
-[username] {+ex:username ?sh:path} must have at least [3] {sh:minLength ^^xsd:integer} and at most [20] {sh:maxLength ^^xsd:integer} characters.
+## User Account Test Shape {=ex:UserAccountTestShape .sh:NodeShape ?cat:hasShape label}
+
+Validates all [member] {+member ?sh:targetObjectsOf} entities with correct length of the **username** {+ex:#usernameLength ?sh:property sh:name}.
+
+**Username must be 3-20 characters** {=ex:#usernameLength .sh:PropertyShape sh:message} requires [username] {+ex:username ?sh:path} to have at least [3] {sh:minLength ^^xsd:integer} and at most [20] {sh:maxLength ^^xsd:integer} characters.
 
 ---
 
-### Test Data {=ex:data .Container}
+## Test Data {=ex:data .Container}
 
-#### Valid User {=ex:ValidUser ?member}
+### Valid User {=ex:ValidUser ?member}
 Username: [john_doe] {ex:username}
 
-#### Invalid User {=ex:InvalidUser ?member}
+### Invalid User {=ex:InvalidUser ?member}
 Username: [jd] {ex:username}
 ~~~~~~
+
+**Expected Result:** 1 violation (InvalidUser fails because username is only 2 characters, below the minimum of 3)
 
 ---
 
