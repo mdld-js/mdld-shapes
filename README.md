@@ -136,10 +136,6 @@ node validate.js ./shacl-demo.md
 node validate.js ./shacl.md
 ```
 
-**Note:** The standalone `validate.js` has known limitations:
-- ✅ Works with simple constraints (sh:class, sh:datatype, sh:minCount, sh:maxCount, sh:pattern, etc.)
-- ❌ Does NOT support logical constraints (sh:and, sh:or, sh:xone) due to RDF list support requirements
-
 ## 🎯 Real-World Applications
 
 ### **E-commerce**
