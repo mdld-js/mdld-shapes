@@ -35,7 +35,6 @@ requires the [manager] {+ex:manager ?sh:path} property to be an instance of [Per
 ### 🛠️ **Complete Toolchain**
 - **validate.js** - Standalone SHACL validation using shacl-engine (see limitations below)
 - **mdld-parse** - MDLD to RDF parsing
-- **Intelligraphs** - Visual graph exploration
 - **RDF Export** - Standard Turtle/JSON-LD output
 - **SPARQL Support** - Query your validation rules
 
