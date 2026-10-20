@@ -67,7 +67,7 @@ Note: Node-based targeting provides precise control over which specific entities
 
 ```bash
 # This should show 3 violations - database status, uptime, and CEO clearance
-ig-cli validate ./targeting/targetNode.md
+node validate.js ./targeting/targetNode.md
 ```
 
 ---

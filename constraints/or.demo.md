@@ -42,5 +42,5 @@ Contact: [invalid] {ex:contact}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/or.demo.md
+node validate.js ./constraints/or.demo.md
 ```

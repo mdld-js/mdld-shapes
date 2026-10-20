@@ -37,7 +37,7 @@ Category: [Electronics] {ex:category}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/and.demo.md
+node validate.js ./constraints/and.demo.md
 ```
 
 ---

@@ -32,7 +32,7 @@ Email: [user@example.org] {ex:email}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/pattern.demo.md
+node validate.js ./constraints/pattern.demo.md
 ```
 
 ---

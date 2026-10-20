@@ -34,5 +34,5 @@ Username: [jd] {ex:username}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/length.demo.md
+node validate.js ./constraints/length.demo.md
 ```

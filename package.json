@@ -3,6 +3,12 @@
 	"version": "1.1.0",
 	"type": "module",
 	"scripts": {
-		"assemble": "node assemble.js"
+		"assemble": "node assemble.js",
+		"validate": "node validate.js"
+	},
+	"dependencies": {
+		"mdld-parse": "^1.1.0",
+		"n3": "^2.13.12",
+		"shacl-engine": "^1.1.3"
 	}
 }

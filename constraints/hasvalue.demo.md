@@ -32,7 +32,7 @@ Status: [standby] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/hasvalue.demo.md
+node validate.js ./constraints/hasvalue.demo.md
 ```
 
 ---

@@ -37,7 +37,7 @@ Event Date: [not-a-date] {ex:eventDate}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/js.demo.md
+node validate.js ./constraints/js.demo.md
 ```
 
 ---

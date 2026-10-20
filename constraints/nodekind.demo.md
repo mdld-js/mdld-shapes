@@ -37,5 +37,5 @@ Reference: [text] {ex:reference}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/nodekind.demo.md
+node validate.js ./constraints/nodekind.demo.md
 ```

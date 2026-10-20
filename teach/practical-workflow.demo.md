@@ -79,5 +79,5 @@ SKU: [SKU-99999] {ex:sku}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./teach/practical-workflow.demo.md
+node validate.js ./teach/practical-workflow.demo.md
 ```

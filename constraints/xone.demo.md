@@ -42,5 +42,5 @@ Role: [guest] {ex:role}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/xone.demo.md
+node validate.js ./constraints/xone.demo.md
 ```

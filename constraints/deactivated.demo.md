@@ -36,7 +36,7 @@ Category: [inactive] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/deactivated.demo.md
+node validate.js ./constraints/deactivated.demo.md
 ```
 
 ---

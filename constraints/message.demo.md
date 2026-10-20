@@ -32,7 +32,7 @@ Value: [-1000.00] {ex:contractValue ^^xsd:decimal}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/message.demo.md
+node validate.js ./constraints/message.demo.md
 ```
 
 ---

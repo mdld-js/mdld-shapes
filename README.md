@@ -33,7 +33,8 @@ requires the [manager] {+ex:manager ?sh:path} property to be an instance of [Per
 ```
 
 ### 🛠️ **Complete Toolchain**
-- **ig-cli** - Command-line validation and querying
+- **validate.js** - Standalone SHACL validation using shacl-engine (see limitations below)
+- **mdld-parse** - MDLD to RDF parsing
 - **Intelligraphs** - Visual graph exploration
 - **RDF Export** - Standard Turtle/JSON-LD output
 - **SPARQL Support** - Query your validation rules
@@ -53,14 +54,10 @@ requires the [manager] {+ex:manager ?sh:path} property to be an instance of [Per
 ```bash
 git clone https://github.com/davay42/mdld-shapes.git
 cd mdld-shapes
-curl -O https://app.intelligraphs.com/ig-cli.js
-chmod +x ig-cli.js
-mv ig-cli.js /usr/local/bin/ig-cli
+pnpm install
 
 # Explore the catalog
-ig-cli stats
-ig-cli validate ./constraints/class.demo.md
-ig-cli get entity https://mdld.js.org/shacl/example/class/InvalidEmployee
+node validate.js ./constraints/class.demo.md
 ```
 
 ### Option 2: View with Intelligraphs
@@ -132,30 +129,20 @@ node assemble.js
 ### Validate Data Quality
 ```bash
 # Test individual demo files
-ig-cli validate ./constraints/class.demo.md
-ig-cli validate ./targeting/targetClass.demo.md
+node validate.js ./constraints/class.demo.md
+node validate.js ./targeting/targetClass.demo.md
 
 # Validate assembled demo catalog
-ig-cli validate ./shacl-demo.md
+node validate.js ./shacl-demo.md
 
 # Validate clean ontology (should have 0 violations)
-ig-cli validate ./shacl.md
-
-# Get detailed entity information
-ig-cli get entity https://mdld.js.org/shacl/example/class/InvalidEmployee
+node validate.js ./shacl.md
 ```
 
-### Query Validation Rules
-```bash
-# List all SHACL shapes
-ig-cli shapes
-
-# Find all constraint types
-ig-cli types | grep "Constraint"
-
-# Export to standard RDF formats
-ig-cli dump --format=ttl > shapes.ttl
-```
+**Note:** The standalone `validate.js` has known limitations:
+- ✅ Works with simple constraints (sh:class, sh:datatype, sh:minCount, sh:maxCount, sh:pattern, etc.)
+- ❌ Does NOT support logical constraints (sh:and, sh:or, sh:xone) due to RDF list support requirements
+- For full SHACL specification compliance including logical constraints, use ig-cli instead
 
 ## 🎯 Real-World Applications
 
@@ -231,7 +218,7 @@ ig-cli dump --format=ttl > shapes.ttl
 git clone https://github.com/davay42/mdld-shapes.git
 cd mdld-shapes
 # Add your constraint examples
-# Test with ig-cli validate
+# Test with node validate.js
 # Submit pull request
 ```
 

@@ -34,7 +34,7 @@ Shipping Date: [2024-06-20] {ex:shippingDate ^^xsd:date}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/comparison.demo.md
+node validate.js ./constraints/comparison.demo.md
 ```
 
 ---

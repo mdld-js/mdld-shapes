@@ -107,7 +107,7 @@ Note: Class-based targeting validates all instances of the specified class, maki
 
 ```bash
 # This should show 2 violations - missing name and negative price
-ig-cli validate ./targeting/targetClass.md
+node validate.js ./targeting/targetClass.md
 ```
 
 ---
@@ -192,7 +192,7 @@ Note: Node-based targeting provides precise control over which specific entities
 
 ```bash
 # This should show 3 violations - database status, uptime, and CEO clearance
-ig-cli validate ./targeting/targetNode.md
+node validate.js ./targeting/targetNode.md
 ```
 
 ---
@@ -302,7 +302,7 @@ Note: Subject-based targeting validates entities that initiate relationships, ma
 
 ```bash
 # This should show 3 violations - management level, team size, and approval authority
-ig-cli validate ./targeting/targetSubjectsOf.md
+node validate.js ./targeting/targetSubjectsOf.md
 ```
 
 ---
@@ -430,7 +430,7 @@ Note: Object-based targeting validates entities that are referenced by others, m
 
 ```bash
 # This should show 4 violations - workload, status, price, and availability
-ig-cli validate ./targeting/targetObjectsOf.md
+node validate.js ./targeting/targetObjectsOf.md
 ```
 
 ---
@@ -551,7 +551,7 @@ Manager: [robot] {+ex:robot ?ex:manager ex:Role}
 
 ```bash
 # This should show 1 violation for class constraint violation
-ig-cli validate ./constraints/class.demo.md
+node validate.js ./constraints/class.demo.md
 ```
 
 ---
@@ -602,7 +602,7 @@ Price: [29.99] {ex:price ^^xsd:string}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/datatype.demo.md
+node validate.js ./constraints/datatype.demo.md
 ```
 
 ---
@@ -657,7 +657,7 @@ Reference: [text] {ex:reference}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/nodekind.demo.md
+node validate.js ./constraints/nodekind.demo.md
 ```
 
 
@@ -707,7 +707,7 @@ Email: [personal@example.com] {ex:email}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/count.demo.md
+node validate.js ./constraints/count.demo.md
 ```
 
 
@@ -755,7 +755,7 @@ Price: [5] {ex:price ^^xsd:decimal}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/range.demo.md
+node validate.js ./constraints/range.demo.md
 ```
 
 ---
@@ -807,7 +807,7 @@ Shipping Date: [2024-06-20] {ex:shippingDate ^^xsd:date}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/comparison.demo.md
+node validate.js ./constraints/comparison.demo.md
 ```
 
 ---
@@ -859,7 +859,7 @@ Alternative Label: [Germany] {ex:altLabel}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/disjoint.demo.md
+node validate.js ./constraints/disjoint.demo.md
 ```
 
 ---
@@ -911,7 +911,7 @@ Status: [deleted] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/not.demo.md
+node validate.js ./constraints/not.demo.md
 ```
 
 ---
@@ -966,7 +966,7 @@ Category: [Electronics] {ex:category}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/and.demo.md
+node validate.js ./constraints/and.demo.md
 ```
 
 ---
@@ -1026,7 +1026,7 @@ Contact: [invalid] {ex:contact}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/or.demo.md
+node validate.js ./constraints/or.demo.md
 ```
 
 
@@ -1084,7 +1084,7 @@ Role: [guest] {ex:role}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/xone.demo.md
+node validate.js ./constraints/xone.demo.md
 ```
 
 
@@ -1134,7 +1134,7 @@ Username: [jd] {ex:username}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/length.demo.md
+node validate.js ./constraints/length.demo.md
 ```
 
 
@@ -1182,7 +1182,7 @@ Email: [user@example.org] {ex:email}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/pattern.demo.md
+node validate.js ./constraints/pattern.demo.md
 ```
 
 ---
@@ -1232,7 +1232,7 @@ Title: [Hallo Welt] {ex:title @de}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/language.demo.md
+node validate.js ./constraints/language.demo.md
 ```
 
 
@@ -1282,7 +1282,7 @@ Title: [Hola Mundo] {ex:title @en}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/uniqueLang.demo.md
+node validate.js ./constraints/uniqueLang.demo.md
 ```
 
 ***
@@ -1332,7 +1332,7 @@ Status: [standby] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/hasvalue.demo.md
+node validate.js ./constraints/hasvalue.demo.md
 ```
 
 ---
@@ -1386,7 +1386,7 @@ Street: [St] {ex:street}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/node.demo.md
+node validate.js ./constraints/node.demo.md
 ```
 
 ---
@@ -1439,7 +1439,7 @@ Status: [Pending] {+ex:Pending ?ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/in.demo.md
+node validate.js ./constraints/in.demo.md
 ```
 
 ---
@@ -1491,7 +1491,7 @@ Email: [bob@gmail.com] {ex:email}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/qualifiedCount.demo.md
+node validate.js ./constraints/qualifiedCount.demo.md
 ```
 
 ---
@@ -1556,7 +1556,7 @@ Email: [<jane@example.com>] {ex:email}  # Undeclared property
 
 ```bash
 # This should show 1 violation - InvalidPerson has undeclared email property
-ig-cli validate ./constraints/closed.demo.md
+node validate.js ./constraints/closed.demo.md
 ```
 
 ***
@@ -1610,7 +1610,7 @@ Category: [inactive] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/deactivated.demo.md
+node validate.js ./constraints/deactivated.demo.md
 ```
 
 ---
@@ -1679,7 +1679,7 @@ Name: [] {ex:name}  # Info violation (empty string)
 
 ```bash
 # This should show 3 violations with different severity levels
-ig-cli validate ./constraints/severity.demo.md
+node validate.js ./constraints/severity.demo.md
 ```
 
 ---
@@ -1729,7 +1729,7 @@ Value: [-1000.00] {ex:contractValue ^^xsd:decimal}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/message.demo.md
+node validate.js ./constraints/message.demo.md
 ```
 
 ---
@@ -1784,7 +1784,7 @@ Event Date: [not-a-date] {ex:eventDate}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/js.demo.md
+node validate.js ./constraints/js.demo.md
 ```
 
 ---

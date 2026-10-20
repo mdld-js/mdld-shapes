@@ -32,5 +32,5 @@ Title: [Hallo Welt] {ex:title @de}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/language.demo.md
+node validate.js ./constraints/language.demo.md
 ```

@@ -34,7 +34,7 @@ Status: [deleted] {ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/not.demo.md
+node validate.js ./constraints/not.demo.md
 ```
 
 ---

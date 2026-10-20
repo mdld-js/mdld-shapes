@@ -32,7 +32,7 @@ Price: [5] {ex:price ^^xsd:decimal}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/range.demo.md
+node validate.js ./constraints/range.demo.md
 ```
 
 ---

@@ -36,7 +36,7 @@ Street: [St] {ex:street}
 ## 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/node.demo.md
+node validate.js ./constraints/node.demo.md
 ```
 
 ---

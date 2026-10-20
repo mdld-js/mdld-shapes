@@ -47,7 +47,7 @@ Email: [<jane@example.com>] {ex:email}  # Undeclared property
 
 ```bash
 # This should show 1 violation - InvalidPerson has undeclared email property
-ig-cli validate ./constraints/closed.demo.md
+node validate.js ./constraints/closed.demo.md
 ```
 
 ***

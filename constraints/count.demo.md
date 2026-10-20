@@ -34,5 +34,5 @@ Email: [personal@example.com] {ex:email}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/count.demo.md
+node validate.js ./constraints/count.demo.md
 ```

@@ -110,7 +110,7 @@ Note: Object-based targeting validates entities that are referenced by others, m
 
 ```bash
 # This should show 4 violations - workload, status, price, and availability
-ig-cli validate ./targeting/targetObjectsOf.md
+node validate.js ./targeting/targetObjectsOf.md
 ```
 
 ---

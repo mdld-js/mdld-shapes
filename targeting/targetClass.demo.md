@@ -53,7 +53,7 @@ Note: Class-based targeting validates all instances of the specified class, maki
 
 ```bash
 # This should show 2 violations - missing name and negative price
-ig-cli validate ./targeting/targetClass.md
+node validate.js ./targeting/targetClass.md
 ```
 
 ---

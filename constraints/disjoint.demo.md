@@ -34,7 +34,7 @@ Alternative Label: [Germany] {ex:altLabel}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/disjoint.demo.md
+node validate.js ./constraints/disjoint.demo.md
 ```
 
 ---

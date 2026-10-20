@@ -33,7 +33,7 @@ Price: [29.99] {ex:price ^^xsd:string}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/datatype.demo.md
+node validate.js ./constraints/datatype.demo.md
 ```
 
 ---

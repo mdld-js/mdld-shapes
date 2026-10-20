@@ -92,7 +92,7 @@ Note: Subject-based targeting validates entities that initiate relationships, ma
 
 ```bash
 # This should show 3 violations - management level, team size, and approval authority
-ig-cli validate ./targeting/targetSubjectsOf.md
+node validate.js ./targeting/targetSubjectsOf.md
 ```
 
 ---

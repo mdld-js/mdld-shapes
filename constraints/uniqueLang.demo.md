@@ -34,7 +34,7 @@ Title: [Hola Mundo] {ex:title @en}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/uniqueLang.demo.md
+node validate.js ./constraints/uniqueLang.demo.md
 ```
 
 ***

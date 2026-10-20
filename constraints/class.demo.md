@@ -34,7 +34,7 @@ Manager: [robot] {+ex:robot ?ex:manager ex:Role}
 
 ```bash
 # This should show 1 violation for class constraint violation
-ig-cli validate ./constraints/class.demo.md
+node validate.js ./constraints/class.demo.md
 ```
 
 ---

@@ -122,5 +122,5 @@ Budget: [15000.00] {ex:budget ^^xsd:decimal}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./teach/advanced.demo.md
+node validate.js ./teach/advanced.demo.md
 ```

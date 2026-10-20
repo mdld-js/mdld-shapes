@@ -35,7 +35,7 @@ Status: [Pending] {+ex:Pending ?ex:status}
 ### 🔍 Test Validation
 
 ```bash
-ig-cli validate ./constraints/in.demo.md
+node validate.js ./constraints/in.demo.md
 ```
 
 ---

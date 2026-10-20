@@ -51,7 +51,7 @@ Name: [] {ex:name}  # Info violation (empty string)
 
 ```bash
 # This should show 3 violations with different severity levels
-ig-cli validate ./constraints/severity.demo.md
+node validate.js ./constraints/severity.demo.md
 ```
 
 ---
