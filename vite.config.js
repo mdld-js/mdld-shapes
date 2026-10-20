@@ -2,12 +2,11 @@ export default {
     build: {
         lib: {
             entry: 'index.js',
-            name: 'mdld-shapes',
-            fileName: 'mdld-shapes',
+            fileName: 'shacl-engine',
             formats: ['es']
         },
         target: 'es2020',
-        outDir: 'dist',
+        outDir: 'lib',
         minify: false,
         sourcemap: false,
     }
