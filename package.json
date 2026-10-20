@@ -4,7 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"assemble": "node assemble.js",
-		"validate": "node validate.js"
+		"validate": "node validate.js",
+		"test": "node --test compare-validators.js"
 	},
 	"dependencies": {
 		"mdld-parse": "^1.1.0",

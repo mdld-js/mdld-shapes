@@ -12,17 +12,17 @@
 
 // ─── Namespaces ────────────────────────────────────────────────────────────────
 
-const RDF  = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+const RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 const RDFS = 'http://www.w3.org/2000/01/rdf-schema#'
-const SH   = 'http://www.w3.org/ns/shacl#'
-const XSD  = 'http://www.w3.org/2001/XMLSchema#'
+const SH = 'http://www.w3.org/ns/shacl#'
+const XSD = 'http://www.w3.org/2001/XMLSchema#'
 
 const nn = (v) => ({ termType: 'NamedNode', value: v, equals(t) { return t && t.termType === 'NamedNode' && t.value === v } })
 
-const RDF_TYPE  = nn(RDF + 'type')
+const RDF_TYPE = nn(RDF + 'type')
 const RDF_FIRST = nn(RDF + 'first')
-const RDF_REST  = nn(RDF + 'rest')
-const RDF_NIL   = nn(RDF + 'nil')
+const RDF_REST = nn(RDF + 'rest')
+const RDF_NIL = nn(RDF + 'nil')
 
 const SH_NS = SH  // shortcut
 
@@ -49,10 +49,10 @@ function termEquals(a, b) {
   return true
 }
 
-function isNamedNode(t)  { return t?.termType === 'NamedNode' }
-function isBlankNode(t)  { return t?.termType === 'BlankNode' }
-function isLiteral(t)    { return t?.termType === 'Literal' }
-function isIRI(t)        { return isNamedNode(t) }
+function isNamedNode(t) { return t?.termType === 'NamedNode' }
+function isBlankNode(t) { return t?.termType === 'BlankNode' }
+function isLiteral(t) { return t?.termType === 'Literal' }
+function isIRI(t) { return isNamedNode(t) }
 
 // ─── Store ─────────────────────────────────────────────────────────────────────
 
@@ -65,18 +65,18 @@ class Store {
 
   get size() { return this.#quads.size }
 
-  add(q)       { this.#quads.add(q); return this }
-  delete(q)    { for (const x of this.#quads) if (quadEq(x, q)) { this.#quads.delete(x); break }; return this }
-  has(q)       { for (const x of this.#quads) if (quadEq(x, q)) return true; return false }
+  add(q) { this.#quads.add(q); return this }
+  delete(q) { for (const x of this.#quads) if (quadEq(x, q)) { this.#quads.delete(x); break }; return this }
+  has(q) { for (const x of this.#quads) if (quadEq(x, q)) return true; return false }
   *[Symbol.iterator]() { yield* this.#quads }
 
   match(s, p, o, g) {
     const r = []
     for (const q of this.#quads) {
       if ((!s || termEquals(q.subject, s)) &&
-          (!p || termEquals(q.predicate, p)) &&
-          (!o || termEquals(q.object, o)) &&
-          (!g || termEquals(q.graph, g))) {
+        (!p || termEquals(q.predicate, p)) &&
+        (!o || termEquals(q.object, o)) &&
+        (!g || termEquals(q.graph, g))) {
         r.push(q)
       }
     }
@@ -86,9 +86,9 @@ class Store {
 
 function quadEq(a, b) {
   return termEquals(a.subject, b.subject) &&
-         termEquals(a.predicate, b.predicate) &&
-         termEquals(a.object, b.object) &&
-         termEquals(a.graph, b.graph)
+    termEquals(a.predicate, b.predicate) &&
+    termEquals(a.object, b.object) &&
+    termEquals(a.graph, b.graph)
 }
 
 // ─── Graph helpers ─────────────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ function readList(ds, head) {
     if (visited.has(key)) throw new Error(`Circular RDF list at ${cur.value}`)
     visited.add(key)
     const firsts = valuesOf(ds, cur, RDF_FIRST)
-    const rests  = valuesOf(ds, cur, RDF_REST)
+    const rests = valuesOf(ds, cur, RDF_REST)
     if (firsts.length !== 1 || rests.length !== 1)
       throw new Error(`Malformed RDF list at ${cur.value} (first:${firsts.length}, rest:${rests.length})`)
     items.push(firsts[0])
@@ -195,11 +195,11 @@ function sh(v) { return nn(SH + v) }
 
 function findShapes(shapesDS) {
   const shapes = new Set()
-  // Explicit NodeShape / PropertyShape
-  for (const q of shapesDS.match(null, RDF_TYPE, nn(SH + 'NodeShape')))  shapes.add(termKey(q.subject))
-  for (const q of shapesDS.match(null, RDF_TYPE, nn(SH + 'PropertyShape'))) shapes.add(termKey(q.subject))
-  // Anything with sh:target* is a shape
-  for (const pred of ['targetClass','targetNode','targetSubjectsOf','targetObjectsOf']) {
+  // Only NodeShapes are root entry points for validation
+  for (const q of shapesDS.match(null, RDF_TYPE, nn(SH + 'NodeShape'))) shapes.add(termKey(q.subject))
+
+  // Also catch any shape that has an explicit target, regardless of type declaration
+  for (const pred of ['targetClass', 'targetNode', 'targetSubjectsOf', 'targetObjectsOf']) {
     for (const q of shapesDS.match(null, sh(pred), null)) shapes.add(termKey(q.subject))
   }
   return [...shapes]
@@ -221,7 +221,7 @@ function extractConstraints(shapesDS, shapeTerm) {
     'minExclusive', 'maxExclusive', 'minInclusive', 'maxInclusive',
     'minLength', 'maxLength', 'pattern', 'flags', 'languageIn', 'uniqueLang',
     'equals', 'disjoint', 'lessThan', 'lessThanOrEquals',
-    'not', 'and', 'or', 'xone',
+    'not', 'and', 'or', 'xone', 'node',
     'hasValue', 'in', 'closed', 'ignoredProperties',
     'qualifiedValueShape', 'qualifiedMinCount', 'qualifiedMaxCount',
   ]
@@ -235,52 +235,75 @@ function extractConstraints(shapesDS, shapeTerm) {
   }
 
   // sh:message and sh:severity
-  const messages   = valuesOf(shapesDS, shapeTerm, sh('message'))
+  const messages = valuesOf(shapesDS, shapeTerm, sh('message'))
   const severities = valuesOf(shapesDS, shapeTerm, sh('severity'))
   const deactivated = valuesOf(shapesDS, shapeTerm, sh('deactivated'))
 
   // Group into constraint components
   // Value-type
-  if (params.class)       constraints.push({ component: 'ClassConstraintComponent',       params: { class: params.class }, messages, severities })
-  if (params.datatype)    constraints.push({ component: 'DatatypeConstraintComponent',    params: { datatype: params.datatype }, messages, severities })
-  if (params.nodeKind)    constraints.push({ component: 'NodeKindConstraintComponent',    params: { nodeKind: params.nodeKind }, messages, severities })
+  if (params.class) constraints.push({ component: 'ClassConstraintComponent', params: { class: params.class }, messages, severities })
+  if (params.datatype) constraints.push({ component: 'DatatypeConstraintComponent', params: { datatype: params.datatype }, messages, severities })
+  if (params.nodeKind) constraints.push({ component: 'NodeKindConstraintComponent', params: { nodeKind: params.nodeKind }, messages, severities })
   // Cardinality
   if (params.minCount != null) constraints.push({ component: 'MinCountConstraintComponent', params: { minCount: parseInt(params.minCount.value) }, messages, severities })
   if (params.maxCount != null) constraints.push({ component: 'MaxCountConstraintComponent', params: { maxCount: parseInt(params.maxCount.value) }, messages, severities })
   // Range
-  if (params.minExclusive)  constraints.push({ component: 'MinExclusiveConstraintComponent',  params: { minExclusive: params.minExclusive }, messages, severities })
-  if (params.maxExclusive)  constraints.push({ component: 'MaxExclusiveConstraintComponent',  params: { maxExclusive: params.maxExclusive }, messages, severities })
-  if (params.minInclusive)  constraints.push({ component: 'MinInclusiveConstraintComponent',  params: { minInclusive: params.minInclusive }, messages, severities })
-  if (params.maxInclusive)  constraints.push({ component: 'MaxInclusiveConstraintComponent',  params: { maxInclusive: params.maxInclusive }, messages, severities })
+  if (params.minExclusive) constraints.push({ component: 'MinExclusiveConstraintComponent', params: { minExclusive: params.minExclusive }, messages, severities })
+  if (params.maxExclusive) constraints.push({ component: 'MaxExclusiveConstraintComponent', params: { maxExclusive: params.maxExclusive }, messages, severities })
+  if (params.minInclusive) constraints.push({ component: 'MinInclusiveConstraintComponent', params: { minInclusive: params.minInclusive }, messages, severities })
+  if (params.maxInclusive) constraints.push({ component: 'MaxInclusiveConstraintComponent', params: { maxInclusive: params.maxInclusive }, messages, severities })
   // String
   if (params.minLength != null) constraints.push({ component: 'MinLengthConstraintComponent', params: { minLength: parseInt(params.minLength.value) }, messages, severities })
   if (params.maxLength != null) constraints.push({ component: 'MaxLengthConstraintComponent', params: { maxLength: parseInt(params.maxLength.value) }, messages, severities })
-  if (params.pattern)     constraints.push({ component: 'PatternConstraintComponent',     params: { pattern: params.pattern.value, flags: params.flags?.value || '' }, messages, severities })
-  if (params.languageIn)  constraints.push({ component: 'LanguageInConstraintComponent',  params: { languageIn: Array.isArray(params.languageIn) ? readList(shapesDS, params.languageIn[0]) : readList(shapesDS, params.languageIn) }, messages, severities })
-  if (params.uniqueLang)  constraints.push({ component: 'UniqueLangConstraintComponent',  params: { uniqueLang: params.uniqueLang.value === 'true' }, messages, severities })
+  if (params.pattern) constraints.push({ component: 'PatternConstraintComponent', params: { pattern: params.pattern.value, flags: params.flags?.value || '' }, messages, severities })
+  if (params.languageIn) constraints.push({ component: 'LanguageInConstraintComponent', params: { languageIn: Array.isArray(params.languageIn) ? readList(shapesDS, params.languageIn[0]) : readList(shapesDS, params.languageIn) }, messages, severities })
+  if (params.uniqueLang) constraints.push({ component: 'UniqueLangConstraintComponent', params: { uniqueLang: params.uniqueLang.value === 'true' }, messages, severities })
   // Property pair
-  if (params.equals)             constraints.push({ component: 'EqualsConstraintComponent',             params: { equals: params.equals }, messages, severities })
-  if (params.disjoint)           constraints.push({ component: 'DisjointConstraintComponent',           params: { disjoint: params.disjoint }, messages, severities })
-  if (params.lessThan)           constraints.push({ component: 'LessThanConstraintComponent',           params: { lessThan: params.lessThan }, messages, severities })
-  if (params.lessThanOrEquals)   constraints.push({ component: 'LessThanOrEqualsConstraintComponent',   params: { lessThanOrEquals: params.lessThanOrEquals }, messages, severities })
+  if (params.equals) constraints.push({ component: 'EqualsConstraintComponent', params: { equals: params.equals }, messages, severities })
+  if (params.disjoint) constraints.push({ component: 'DisjointConstraintComponent', params: { disjoint: params.disjoint }, messages, severities })
+  if (params.lessThan) constraints.push({ component: 'LessThanConstraintComponent', params: { lessThan: params.lessThan }, messages, severities })
+  if (params.lessThanOrEquals) constraints.push({ component: 'LessThanOrEqualsConstraintComponent', params: { lessThanOrEquals: params.lessThanOrEquals }, messages, severities })
   // Logical
-  if (params.not)  constraints.push({ component: 'NotConstraintComponent',  params: { not: params.not }, messages, severities })
-  if (params.and)  constraints.push({ component: 'AndConstraintComponent',  params: { and: Array.isArray(params.and) ? readList(shapesDS, params.and[0]) : readList(shapesDS, params.and) }, messages, severities })
-  if (params.or)   constraints.push({ component: 'OrConstraintComponent',   params: { or:  Array.isArray(params.or)  ? readList(shapesDS, params.or[0])  : readList(shapesDS, params.or)  }, messages, severities })
+  if (params.not) {
+    // sh:not can have multiple values - create separate constraint for each
+    const notTerms = Array.isArray(params.not) ? params.not : [params.not]
+    for (const notTerm of notTerms) {
+      constraints.push({ component: 'NotConstraintComponent', params: { not: notTerm }, messages, severities })
+    }
+  }
+  if (params.and) constraints.push({ component: 'AndConstraintComponent', params: { and: Array.isArray(params.and) ? readList(shapesDS, params.and[0]) : readList(shapesDS, params.and) }, messages, severities })
+  if (params.or) constraints.push({ component: 'OrConstraintComponent', params: { or: Array.isArray(params.or) ? readList(shapesDS, params.or[0]) : readList(shapesDS, params.or) }, messages, severities })
   if (params.xone) constraints.push({ component: 'XoneConstraintComponent', params: { xone: Array.isArray(params.xone) ? readList(shapesDS, params.xone[0]) : readList(shapesDS, params.xone) }, messages, severities })
   // Shape-based
+  if (params.node) constraints.push({ component: 'NodeConstraintComponent', params: { node: params.node }, messages, severities })
   if (params.hasValue) constraints.push({ component: 'HasValueConstraintComponent', params: { hasValue: params.hasValue }, messages, severities })
-  if (params.in)       constraints.push({ component: 'InConstraintComponent',       params: { in: Array.isArray(params.in) ? readList(shapesDS, params.in[0]) : readList(shapesDS, params.in) }, messages, severities })
-  if (params.closed != null) constraints.push({ component: 'ClosedConstraintComponent', params: {
-    closed: params.closed.value === 'true' || params.closed === true,
-    ignoredProperties: params.ignoredProperties ? (Array.isArray(params.ignoredProperties) ? readList(shapesDS, params.ignoredProperties[0]) : readList(shapesDS, params.ignoredProperties)) : []
-  }, messages, severities })
-  // Qualified
-  if (params.qualifiedValueShape) constraints.push({ component: 'QualifiedValueShapeConstraintComponent', params: {
-    qualifiedValueShape: params.qualifiedValueShape,
-    qualifiedMinCount: params.qualifiedMinCount ? parseInt(params.qualifiedMinCount.value) : 0,
-    qualifiedMaxCount: params.qualifiedMaxCount ? parseInt(params.qualifiedMaxCount.value) : Infinity,
-  }, messages, severities })
+  if (params.in) constraints.push({ component: 'InConstraintComponent', params: { in: Array.isArray(params.in) ? readList(shapesDS, params.in[0]) : readList(shapesDS, params.in) }, messages, severities })
+  if (params.closed != null) constraints.push({
+    component: 'ClosedConstraintComponent', params: {
+      closed: params.closed !== false &&
+        !(isLiteral(params.closed) && ['false', '0'].includes(params.closed.value.toLowerCase())),
+      ignoredProperties: params.ignoredProperties ? (Array.isArray(params.ignoredProperties) ? readList(shapesDS, params.ignoredProperties[0]) : readList(shapesDS, params.ignoredProperties)) : []
+    }, messages, severities
+  })
+  // Qualified - split into separate components per SHACL spec
+  if (params.qualifiedValueShape) {
+    if (params.qualifiedMinCount != null) {
+      constraints.push({
+        component: 'QualifiedMinCountConstraintComponent', params: {
+          qualifiedValueShape: params.qualifiedValueShape,
+          qualifiedMinCount: parseInt(params.qualifiedMinCount.value),
+        }, messages, severities
+      })
+    }
+    if (params.qualifiedMaxCount != null) {
+      constraints.push({
+        component: 'QualifiedMaxCountConstraintComponent', params: {
+          qualifiedValueShape: params.qualifiedValueShape,
+          qualifiedMaxCount: parseInt(params.qualifiedMaxCount.value),
+        }, messages, severities
+      })
+    }
+  }
 
   return { constraints, deactivated: deactivated.length > 0 && (deactivated[0].value === 'true' || deactivated[0] === true) }
 }
@@ -385,8 +408,8 @@ function toNumber(t) {
   if (t.datatype) {
     const dt = t.datatype.value
     if (dt === XSD + 'integer' || dt === XSD + 'int' || dt === XSD + 'long' ||
-        dt === XSD + 'short' || dt === XSD + 'byte' || dt === XSD + 'nonNegativeInteger' ||
-        dt === XSD + 'positiveInteger' || dt === XSD + 'unsignedInt' || dt === XSD + 'unsignedLong') {
+      dt === XSD + 'short' || dt === XSD + 'byte' || dt === XSD + 'nonNegativeInteger' ||
+      dt === XSD + 'positiveInteger' || dt === XSD + 'unsignedInt' || dt === XSD + 'unsignedLong') {
       return parseInt(v, 10)
     }
     if (dt === XSD + 'decimal' || dt === XSD + 'float' || dt === XSD + 'double') {
@@ -419,12 +442,12 @@ function compareValues(a, b) {
 function checkNodeKind(value, nodeKindIRI) {
   const kind = nodeKindIRI.value.replace(SH, '')
   switch (kind) {
-    case 'IRI':              return isNamedNode(value)
-    case 'BlankNode':        return isBlankNode(value)
-    case 'Literal':          return isLiteral(value)
-    case 'BlankNodeOrIRI':   return isBlankNode(value) || isNamedNode(value)
+    case 'IRI': return isNamedNode(value)
+    case 'BlankNode': return isBlankNode(value)
+    case 'Literal': return isLiteral(value)
+    case 'BlankNodeOrIRI': return isBlankNode(value) || isNamedNode(value)
     case 'BlankNodeOrLiteral': return isBlankNode(value) || isLiteral(value)
-    case 'IRIOrLiteral':     return isNamedNode(value) || isLiteral(value)
+    case 'IRIOrLiteral': return isNamedNode(value) || isLiteral(value)
     default: return true
   }
 }
@@ -439,10 +462,14 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
   const { component, params } = constraint
   const violations = []
   const severity = constraint.severities?.[0] || nn(SH + 'Violation')
-  const message  = constraint.messages?.[0]?.value || null
+  const message = constraint.messages?.[0]?.value || null
 
   function viol(extra = {}) {
-    return { focusNode, value, severity, component: nn(SH + component), message, shape: ctx.shapeTerm, path: ctx.path, ...extra }
+    const v = { focusNode, value, severity, component: nn(SH + component), message, shape: ctx.shapeTerm, path: ctx.path, ...extra }
+    if (process.env.DEBUG) {
+      console.log(`  ⚠️  ${component} violation: focus=${focusNode?.value}, value=${value?.value || 'none'}, shape=${ctx.shapeTerm?.value}`)
+    }
+    return v
   }
 
   switch (component) {
@@ -484,29 +511,45 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
       break
     }
     case 'MinInclusiveConstraintComponent': {
-      if (compareValues(value, params.minInclusive) < 0) violations.push(viol())
+      // Only applies to literals
+      if (!isLiteral(value)) break
+      // Only compare if both values are comparable (same datatype or compatible)
+      const cmp = compareValues(value, params.minInclusive)
+      if (isNaN(cmp)) break  // Skip if not comparable
+      if (cmp < 0) violations.push(viol())
       break
     }
     case 'MaxInclusiveConstraintComponent': {
-      if (compareValues(value, params.maxInclusive) > 0) violations.push(viol())
+      // Only applies to literals
+      if (!isLiteral(value)) break
+      // Only compare if both values are comparable
+      const cmp = compareValues(value, params.maxInclusive)
+      if (isNaN(cmp)) break  // Skip if not comparable
+      if (cmp > 0) violations.push(viol())
       break
     }
     case 'MinExclusiveConstraintComponent': {
-      if (compareValues(value, params.minExclusive) <= 0) violations.push(viol())
+      if (!isLiteral(value)) break
+      const cmp = compareValues(value, params.minExclusive)
+      if (isNaN(cmp)) break
+      if (cmp <= 0) violations.push(viol())
       break
     }
     case 'MaxExclusiveConstraintComponent': {
-      if (compareValues(value, params.maxExclusive) >= 0) violations.push(viol())
+      if (!isLiteral(value)) break
+      const cmp = compareValues(value, params.maxExclusive)
+      if (isNaN(cmp)) break
+      if (cmp >= 0) violations.push(viol())
       break
     }
     case 'MinLengthConstraintComponent': {
-      const len = isLiteral(value) ? value.value.length : (value.value?.length || 0)
-      if (len < params.minLength) violations.push(viol())
+      if (!isLiteral(value)) break  // Only applies to literals
+      if (value.value.length < params.minLength) violations.push(viol())
       break
     }
     case 'MaxLengthConstraintComponent': {
-      const len = isLiteral(value) ? value.value.length : (value.value?.length || 0)
-      if (len > params.maxLength) violations.push(viol())
+      if (!isLiteral(value)) break  // Only applies to literals
+      if (value.value.length > params.maxLength) violations.push(viol())
       break
     }
     case 'PatternConstraintComponent': {
@@ -553,23 +596,29 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
     case 'LessThanConstraintComponent': {
       const otherVals = valuesOf(dataDS, focusNode, params.lessThan)
       for (const v of values) {
+        if (!isLiteral(v)) continue  // Only applies to literals
         for (const o of otherVals) {
+          if (!isLiteral(o)) continue
           if (compareValues(v, o) >= 0) { violations.push(viol()); break }
         }
-        if (violations.length > 0 && violations[violations.length-1].focusNode === focusNode) break
       }
       break
     }
     case 'LessThanOrEqualsConstraintComponent': {
       const otherVals = valuesOf(dataDS, focusNode, params.lessThanOrEquals)
       for (const v of values) {
+        if (!isLiteral(v)) continue  // Only applies to literals
         for (const o of otherVals) {
+          if (!isLiteral(o)) continue
           if (compareValues(v, o) > 0) { violations.push(viol()); break }
         }
       }
       break
     }
     case 'HasValueConstraintComponent': {
+      // sh:hasValue is a property-level constraint, not value-level
+      // It checks if the property has at least one value equal to the specified value
+      // This should only be evaluated once per property, not per value
       const ok = values.some(v => termEquals(v, params.hasValue))
       if (!ok) violations.push(viol())
       break
@@ -580,8 +629,16 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
       break
     }
     case 'NotConstraintComponent': {
-      const inner = validateNodeAgainstShape(dataDS, shapesDS, params.not, value, ctx)
-      if (inner.length === 0) violations.push(viol())
+      // sh:not takes a single shape (or list of shapes). Normalize to an array of shape terms:
+      const notShapes = Array.isArray(params.not) ? params.not : (params.not ? [params.not] : [])
+      for (const targetShape of notShapes) {
+        const innerCtx = { ...ctx, shapeTerm: targetShape, visited: new Set() }
+        const innerViolations = validateNodeAgainstShape(dataDS, shapesDS, targetShape, value, innerCtx)
+        // sh:not fails if the inner shape conforms (i.e. yields 0 violations)
+        if (innerViolations.length === 0) {
+          violations.push(viol())
+        }
+      }
       break
     }
     case 'AndConstraintComponent': {
@@ -608,7 +665,9 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
       break
     }
     case 'NodeConstraintComponent': {
-      const inner = validateNodeAgainstShape(dataDS, shapesDS, params.node, value, ctx)
+      if (!params.node) break
+      const innerCtx = { ...ctx, shapeTerm: params.node, visited: new Set() }
+      const inner = validateNodeAgainstShape(dataDS, shapesDS, params.node, value, innerCtx)
       if (inner.length > 0) violations.push(viol())
       break
     }
@@ -623,23 +682,38 @@ function evalConstraint(constraint, dataDS, shapesDS, focusNode, value, values, 
         }
       }
       // Add ignored properties
-      for (const ig of params.ignoredProperties) {
+      for (const ig of (params.ignoredProperties || [])) {
         allowedPreds.add(termKey(ig))
       }
+      // Always allow rdf:type in closed shapes according to SHACL spec
+      allowedPreds.add(termKey(RDF_TYPE))
+
       // Check all predicates of focus node
       for (const q of dataDS.match(focusNode, null, null)) {
         if (!allowedPreds.has(termKey(q.predicate))) {
-          violations.push(viol({ value: q.predicate }))
+          violations.push(viol({ path: q.predicate, value: q.object }))
         }
       }
       break
     }
-    case 'QualifiedValueShapeConstraintComponent': {
+    case 'QualifiedMinCountConstraintComponent': {
       const conforming = values.filter(v => {
-        const inner = validateNodeAgainstShape(dataDS, shapesDS, params.qualifiedValueShape, v, ctx)
+        const innerCtx = { ...ctx, shapeTerm: params.qualifiedValueShape, visited: new Set() }
+        const inner = validateNodeAgainstShape(dataDS, shapesDS, params.qualifiedValueShape, v, innerCtx)
         return inner.length === 0
       })
-      if (conforming.length < params.qualifiedMinCount || conforming.length > params.qualifiedMaxCount) {
+      if (conforming.length < params.qualifiedMinCount) {
+        violations.push(viol())
+      }
+      break
+    }
+    case 'QualifiedMaxCountConstraintComponent': {
+      const conforming = values.filter(v => {
+        const innerCtx = { ...ctx, shapeTerm: params.qualifiedValueShape, visited: new Set() }
+        const inner = validateNodeAgainstShape(dataDS, shapesDS, params.qualifiedValueShape, v, innerCtx)
+        return inner.length === 0
+      })
+      if (conforming.length > params.qualifiedMaxCount) {
         violations.push(viol())
       }
       break
@@ -660,9 +734,14 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
   if (deactivated) { parentCtx.visited.delete(key); return [] }
 
   // Check if this is a PropertyShape
-  const isPropertyShape = valuesOf(shapesDS, shapeTerm, RDF_TYPE).some(t => 
+  const isPropertyShape = valuesOf(shapesDS, shapeTerm, RDF_TYPE).some(t =>
     t.value === SH + 'PropertyShape'
-  )
+  ) || valuesOf(shapesDS, shapeTerm, sh('path')).length > 0
+
+  if (process.env.DEBUG) {
+    console.log(`\n🔍 Validating: ${focusNode?.value} against ${shapeTerm?.value} (${isPropertyShape ? 'PropertyShape' : 'NodeShape'})`)
+    console.log(`   Constraints: ${constraints.map(c => c.component).join(', ')}`)
+  }
 
   const violations = []
   const ctx = { ...parentCtx, shapeTerm }
@@ -676,10 +755,11 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
 
       for (const c of constraints) {
         // Property-level constraints (operate on values array)
-        if (['MinCountConstraintComponent','MaxCountConstraintComponent','EqualsConstraintComponent',
-             'DisjointConstraintComponent','LessThanConstraintComponent','LessThanOrEqualsConstraintComponent',
-             'UniqueLangConstraintComponent','HasValueConstraintComponent','ClosedConstraintComponent',
-             'QualifiedValueShapeConstraintComponent'].includes(c.component)) {
+        if (['MinCountConstraintComponent', 'MaxCountConstraintComponent', 'EqualsConstraintComponent',
+          'DisjointConstraintComponent', 'LessThanConstraintComponent', 'LessThanOrEqualsConstraintComponent',
+          'UniqueLangConstraintComponent', 'HasValueConstraintComponent',
+          'QualifiedMinCountConstraintComponent', 'QualifiedMaxCountConstraintComponent',
+          'ClosedConstraintComponent'].includes(c.component)) {
           violations.push(...evalConstraint(c, dataDS, shapesDS, focusNode, focusNode, values, propCtx))
         } else {
           // Value-level constraints (operate on each value)
@@ -693,10 +773,10 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
     // NodeShape: evaluate node-level constraints against the focus node itself
     for (const c of constraints) {
       // Skip property-level constraints at node level
-      if (['MinCountConstraintComponent','MaxCountConstraintComponent','EqualsConstraintComponent',
-           'DisjointConstraintComponent','LessThanConstraintComponent','LessThanOrEqualsConstraintComponent',
-           'UniqueLangConstraintComponent','HasValueConstraintComponent','QualifiedValueShapeConstraintComponent',
-           'ClosedConstraintComponent'].includes(c.component)) continue
+      if (['MinCountConstraintComponent', 'MaxCountConstraintComponent', 'EqualsConstraintComponent',
+        'DisjointConstraintComponent', 'LessThanConstraintComponent', 'LessThanOrEqualsConstraintComponent',
+        'UniqueLangConstraintComponent', 'HasValueConstraintComponent',
+        'QualifiedMinCountConstraintComponent', 'QualifiedMaxCountConstraintComponent'].includes(c.component)) continue
       violations.push(...evalConstraint(c, dataDS, shapesDS, focusNode, focusNode, [focusNode], ctx))
     }
 
@@ -712,10 +792,11 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
 
         for (const c of propConstraints) {
           // Property-level constraints (operate on values array)
-          if (['MinCountConstraintComponent','MaxCountConstraintComponent','EqualsConstraintComponent',
-               'DisjointConstraintComponent','LessThanConstraintComponent','LessThanOrEqualsConstraintComponent',
-               'UniqueLangConstraintComponent','HasValueConstraintComponent','ClosedConstraintComponent',
-               'QualifiedValueShapeConstraintComponent'].includes(c.component)) {
+          if (['MinCountConstraintComponent', 'MaxCountConstraintComponent', 'EqualsConstraintComponent',
+            'DisjointConstraintComponent', 'LessThanConstraintComponent', 'LessThanOrEqualsConstraintComponent',
+            'UniqueLangConstraintComponent', 'HasValueConstraintComponent',
+            'QualifiedMinCountConstraintComponent', 'QualifiedMaxCountConstraintComponent',
+            'ClosedConstraintComponent'].includes(c.component)) {
             violations.push(...evalConstraint(c, dataDS, shapesDS, focusNode, focusNode, values, propCtx))
           } else {
             // Value-level constraints (operate on each value)
@@ -766,7 +847,7 @@ function validate(options) {
   }
 
   const shapesDS = new Store(shapeQuads)
-  const dataDS   = new Store(dataQuads)
+  const dataDS = new Store(dataQuads)
 
   const allViolations = []
   const shapeKeys = findShapes(shapesDS)
@@ -787,9 +868,51 @@ function validate(options) {
     }
   }
 
+  // Debug: log violation summary
+  if (process.env.DEBUG) {
+    const byConstraint = {}
+    const byShape = {}
+    for (const v of allViolations) {
+      const constraint = v.component?.value?.replace('http://www.w3.org/ns/shacl#', '') || 'Unknown'
+      const shape = v.shape?.value || 'Unknown'
+      byConstraint[constraint] = (byConstraint[constraint] || 0) + 1
+      byShape[shape] = (byShape[shape] || 0) + 1
+    }
+    console.log('\n📊 Violation breakdown by constraint:')
+    for (const [constraint, count] of Object.entries(byConstraint).sort((a, b) => b[1] - a[1])) {
+      console.log(`  ${constraint}: ${count}`)
+    }
+    console.log('\n📊 Violation breakdown by shape:')
+    for (const [shape, count] of Object.entries(byShape).sort((a, b) => b[1] - a[1])) {
+      console.log(`  ${shape}: ${count}`)
+    }
+
+    // Log first 10 violations in detail
+    console.log('\n📋 First 10 violations:')
+    for (let i = 0; i < Math.min(10, allViolations.length); i++) {
+      const v = allViolations[i]
+      console.log(`  ${i + 1}. Focus: ${v.focusNode?.value}`)
+      console.log(`     Shape: ${v.shape?.value}`)
+      console.log(`     Path: ${v.path?.value || 'none'}`)
+      console.log(`     Constraint: ${v.component?.value?.replace('http://www.w3.org/ns/shacl#', '')}`)
+      console.log(`     Value: ${v.value?.value || 'none'}`)
+    }
+  }
+
+  // Deduplicate violations (same focusNode + path + component = same violation)
+  const uniqueViolations = []
+  const seen = new Set()
+  for (const v of allViolations) {
+    const key = `${v.focusNode?.value}|${v.path?.value || ''}|${v.component?.value}|${v.value?.value || ''}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      uniqueViolations.push(v)
+    }
+  }
+
   return {
-    conforms: allViolations.length === 0,
-    results: allViolations
+    conforms: uniqueViolations.length === 0,
+    results: uniqueViolations
   }
 }
 

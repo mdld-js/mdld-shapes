@@ -133,6 +133,9 @@ node validate.js ./shacl-demo.md
 
 # Validate clean ontology (should have 0 violations)
 node validate.js ./shacl.md
+
+# Compare mdld-shapes with shacl-engine on the assembled demo
+npm test
 ```
 
 ## 🎯 Real-World Applications
@@ -221,4 +224,3 @@ cd mdld-shapes
 ---
 
 **🎯 Transform how you author semantic validation rules - Write once, validate everywhere, learn continuously.**
-
