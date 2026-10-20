@@ -1,7 +1,7 @@
 /**
  * mdld-shapes.js — Zero-dependency SHACL Core validator for the MD-LD ecosystem.
  *
- * Single-file implementation: ~1200 LOC, no external deps beyond mdld-parse DataFactory.
+ * Single-file implementation: ~1200 LOC, no external deps.
  * Implements W3C SHACL Core (REC-shacl-20170720 + 1.2 Core WD).
  *
  * Usage:
@@ -880,7 +880,6 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
  * @param {Array}  [options.quads]   - All quads (auto-classified into shapes + data)
  * @param {Array}  [options.shapes]  - Shape quads only
  * @param {Array}  [options.data]    - Data quads only
- * @param {Object} [options.factory] - RDF/JS DataFactory (default: identity)
  * @param {Function} [options.classify] - Custom quad classifier
  * @returns {{ conforms: boolean, results: Array }}
  */
@@ -983,11 +982,10 @@ class Validator {
 
   constructor(shapeQuads, options = {}) {
     this.#shapeQuads = shapeQuads
-    this.factory = options.factory
   }
 
   validate(dataQuads) {
-    return validate({ shapes: this.#shapeQuads, data: dataQuads, factory: this.factory })
+    return validate({ shapes: this.#shapeQuads, data: dataQuads })
   }
 }
 
