@@ -32,7 +32,7 @@ Person with undeclared property (violates closed world constraint).
 
 Name: [Jane Smith] {schema:name ^^xsd:string}
 Age: [25] {ex:age ^^xsd:integer}
-Email: [<jane@example.com>] {ex:email}  # Undeclared property
+Email: [jane@example.com] {ex:email}  # Undeclared property
 
 ***
 

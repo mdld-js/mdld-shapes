@@ -44,7 +44,7 @@ Person with undeclared property (violates closed world constraint).
 
 Name: [Jane Smith] {schema:name ^^xsd:string}
 Age: [25] {ex:age ^^xsd:integer}
-Email: [<jane@example.com>] {ex:email}
+Email: [jane@example.com] {ex:email}
 ~~~~~~
 
 **Expected Result:** 1 violation (InvalidPerson fails because it has undeclared email property)
