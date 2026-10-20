@@ -58,21 +58,44 @@ function isIRI(t) { return isNamedNode(t) }
 
 class Store {
   #quads = new Set()
+  #bySubject = new Map()
+  #byPredicate = new Map()
 
   constructor(quads) {
-    if (quads) for (const q of quads) this.#quads.add(q)
+    if (quads) for (const q of quads) this.add(q)
   }
 
   get size() { return this.#quads.size }
 
-  add(q) { this.#quads.add(q); return this }
-  delete(q) { for (const x of this.#quads) if (quadEq(x, q)) { this.#quads.delete(x); break }; return this }
+  add(q) {
+    if (this.#quads.has(q)) return this
+    this.#quads.add(q)
+    this.#addToIndex(this.#bySubject, q.subject, q)
+    this.#addToIndex(this.#byPredicate, q.predicate, q)
+    return this
+  }
+
+  delete(q) {
+    for (const x of this.#quads) {
+      if (!quadEq(x, q)) continue
+      this.#quads.delete(x)
+      this.#deleteFromIndex(this.#bySubject, x.subject, x)
+      this.#deleteFromIndex(this.#byPredicate, x.predicate, x)
+      break
+    }
+    return this
+  }
+
   has(q) { for (const x of this.#quads) if (quadEq(x, q)) return true; return false }
   *[Symbol.iterator]() { yield* this.#quads }
 
   match(s, p, o, g) {
+    let candidates = this.#quads
+    if (s) candidates = this.#getSmaller(candidates, this.#bySubject, s)
+    if (p) candidates = this.#getSmaller(candidates, this.#byPredicate, p)
+
     const r = []
-    for (const q of this.#quads) {
+    for (const q of candidates) {
       if ((!s || termEquals(q.subject, s)) &&
         (!p || termEquals(q.predicate, p)) &&
         (!o || termEquals(q.object, o)) &&
@@ -82,7 +105,30 @@ class Store {
     }
     return new Store(r)
   }
+
+  #addToIndex(index, term, quad) {
+    const key = termKey(term)
+    let quads = index.get(key)
+    if (!quads) index.set(key, quads = new Set())
+    quads.add(quad)
+  }
+
+  #deleteFromIndex(index, term, quad) {
+    const key = termKey(term)
+    const quads = index.get(key)
+    if (!quads) return
+    quads.delete(quad)
+    if (quads.size === 0) index.delete(key)
+  }
+
+  #getSmaller(current, index, term) {
+    const indexed = index.get(termKey(term))
+    if (!indexed) return EMPTY_QUADS
+    return indexed.size < current.size ? indexed : current
+  }
 }
+
+const EMPTY_QUADS = new Set()
 
 function quadEq(a, b) {
   return termEquals(a.subject, b.subject) &&
@@ -308,6 +354,23 @@ function extractConstraints(shapesDS, shapeTerm) {
   return { constraints, deactivated: deactivated.length > 0 && (deactivated[0].value === 'true' || deactivated[0] === true) }
 }
 
+function getShapeInfo(shapesDS, shapeTerm, cache) {
+  const key = termKey(shapeTerm)
+  if (cache.has(key)) return cache.get(key)
+
+  const { constraints, deactivated } = extractConstraints(shapesDS, shapeTerm)
+  const info = {
+    constraints,
+    deactivated,
+    isPropertyShape: valuesOf(shapesDS, shapeTerm, RDF_TYPE).some(t => t.value === SH + 'PropertyShape') ||
+      valuesOf(shapesDS, shapeTerm, sh('path')).length > 0,
+    pathTerms: valuesOf(shapesDS, shapeTerm, sh('path')),
+    propertyShapes: valuesOf(shapesDS, shapeTerm, sh('property'))
+  }
+  cache.set(key, info)
+  return info
+}
+
 // ─── Target resolution ─────────────────────────────────────────────────────────
 
 function resolveTargets(dataDS, shapesDS, shapeTerm) {
@@ -387,8 +450,8 @@ function transitive(ds, start, pred, includeStart) {
   const results = includeStart ? [start] : []
   const visited = new Set()
   const queue = [start]
-  while (queue.length > 0) {
-    const cur = queue.shift()
+  for (let cursor = 0; cursor < queue.length; cursor++) {
+    const cur = queue[cursor]
     const k = termKey(cur)
     if (visited.has(k)) continue
     visited.add(k)
@@ -730,13 +793,9 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
   if (parentCtx.visited.has(key)) return []  // cycle → optimistic
   parentCtx.visited.add(key)
 
-  const { constraints, deactivated } = extractConstraints(shapesDS, shapeTerm)
+  const shapeInfo = getShapeInfo(shapesDS, shapeTerm, parentCtx.shapeCache)
+  const { constraints, deactivated, isPropertyShape, pathTerms } = shapeInfo
   if (deactivated) { parentCtx.visited.delete(key); return [] }
-
-  // Check if this is a PropertyShape
-  const isPropertyShape = valuesOf(shapesDS, shapeTerm, RDF_TYPE).some(t =>
-    t.value === SH + 'PropertyShape'
-  ) || valuesOf(shapesDS, shapeTerm, sh('path')).length > 0
 
   if (process.env.DEBUG) {
     console.log(`\n🔍 Validating: ${focusNode?.value} against ${shapeTerm?.value} (${isPropertyShape ? 'PropertyShape' : 'NodeShape'})`)
@@ -748,7 +807,6 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
 
   if (isPropertyShape) {
     // PropertyShape: resolve path and evaluate constraints against values
-    const pathTerms = valuesOf(shapesDS, shapeTerm, sh('path'))
     for (const pathTerm of pathTerms) {
       const values = resolvePath(dataDS, shapesDS, focusNode, pathTerm)
       const propCtx = { ...ctx, path: pathTerm }
@@ -781,12 +839,12 @@ function validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, parent
     }
 
     // Process sh:property shapes
-    for (const propShape of valuesOf(shapesDS, shapeTerm, sh('property'))) {
-      const { constraints: propConstraints, deactivated: propDeactivated } = extractConstraints(shapesDS, propShape)
+    for (const propShape of shapeInfo.propertyShapes) {
+      const propInfo = getShapeInfo(shapesDS, propShape, parentCtx.shapeCache)
+      const { constraints: propConstraints, deactivated: propDeactivated, pathTerms: propPathTerms } = propInfo
       if (propDeactivated) continue
 
-      const pathTerms = valuesOf(shapesDS, propShape, sh('path'))
-      for (const pathTerm of pathTerms) {
+      for (const pathTerm of propPathTerms) {
         const values = resolvePath(dataDS, shapesDS, focusNode, pathTerm)
         const propCtx = { ...ctx, shapeTerm: propShape, path: pathTerm }
 
@@ -851,6 +909,7 @@ function validate(options) {
 
   const allViolations = []
   const shapeKeys = findShapes(shapesDS)
+  const shapeCache = new Map()
 
   for (const key of shapeKeys) {
     const shapeTerm = getShapeTerm(shapesDS, key)
@@ -861,7 +920,7 @@ function validate(options) {
     if (deactivated.length > 0 && (deactivated[0].value === 'true' || deactivated[0] === true)) continue
 
     const targets = resolveTargets(dataDS, shapesDS, shapeTerm)
-    const ctx = { visited: new Set(), shapeTerm }
+    const ctx = { visited: new Set(), shapeTerm, shapeCache }
 
     for (const focusNode of targets) {
       allViolations.push(...validateNodeAgainstShape(dataDS, shapesDS, shapeTerm, focusNode, ctx))
