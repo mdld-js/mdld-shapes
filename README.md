@@ -50,7 +50,7 @@ requires the [manager] {+ex:manager ?sh:path} property to be an instance of [Per
 
 ## 🚀 Quick Start
 
-### Option 1: Clone and Run Locally
+### Clone and Run Locally
 ```bash
 git clone https://github.com/davay42/mdld-shapes.git
 cd mdld-shapes
@@ -59,9 +59,6 @@ pnpm install
 # Explore the catalog
 node validate.js ./constraints/class.demo.md
 ```
-
-### Option 2: View with Intelligraphs
-👉 [Open in Intelligraphs App](https://app.intelligraphs.com/#/?clone=https://github.com/davay42/mdld-shapes.git)
 
 ## 📁 Repository Structure
 
@@ -142,7 +139,6 @@ node validate.js ./shacl.md
 **Note:** The standalone `validate.js` has known limitations:
 - ✅ Works with simple constraints (sh:class, sh:datatype, sh:minCount, sh:maxCount, sh:pattern, etc.)
 - ❌ Does NOT support logical constraints (sh:and, sh:or, sh:xone) due to RDF list support requirements
-- For full SHACL specification compliance including logical constraints, use ig-cli instead
 
 ## 🎯 Real-World Applications
 
@@ -226,8 +222,6 @@ cd mdld-shapes
 
 - **[MDLD Specification](https://mdld.js.org/)** - Markdown Linked Data format
 - **[SHACL W3C Recommendation](https://www.w3.org/TR/shacl/)** - Shapes Constraint Language
-- **[Intelligraphs Platform](https://app.intelligraphs.com/)** - Visual semantic web tools
-- **[ig-cli Documentation](https://github.com/davay42/ig-cli)** - Command-line RDF tools
 
 ---
 
