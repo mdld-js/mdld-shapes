@@ -3,6 +3,7 @@ import Validator from 'shacl-engine/Validator.js'
 import { parse, DataFactory } from 'mdld-parse'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
+import { createShapeDetector } from './detector.js'
 
 /*
  * STANDALONE SHACL VALIDATION TOOL
@@ -129,13 +130,11 @@ async function main() {
         // Shapes are typically marked with sh:NodeShape or sh:PropertyShape
         const shapesDataset = factory.dataset()
         const dataDataset = factory.dataset()
+        const detector = createShapeDetector()
 
         result.quads.forEach(quad => {
             // Check if this is a shape-related triple
-            const isShape = quad.object.value.includes('NodeShape') ||
-                quad.object.value.includes('PropertyShape') ||
-                quad.predicate.value.includes('http://www.w3.org/ns/shacl#') ||
-                quad.subject.value.includes('Shape')
+            const isShape = detector.classify(quad)
 
             if (isShape) {
                 shapesDataset.addQuad(quad)
